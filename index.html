@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comedy Hub | The World's First Digital Comedy Club</title>
+    <meta name="description" content="Live stand-up comedy from your couch. The world's first digital comedy venue offering global streams and digital experiences.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts: Orbitron for Cyber headers, Inter for readability -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config & Styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            black: '#050505',
+                            charcoal: '#121212',
+                            purple: '#9146FF', // Twitch
+                            teal: '#00F0FF',
+                            pink: '#FF00FF',
+                            gold: '#FFD700'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1f1f1f 1px, transparent 1px), linear-gradient(to bottom, #1f1f1f 1px, transparent 1px)",
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            },
+            safelist: [
+                'hover:border-yellow-500/50',
+                'hover:border-purple-500/50',
+                'hover:border-pink-500/50',
+                'hover:border-cyan-400/50',
+                'text-cyan-400',
+                'text-pink-500',
+                'text-purple-500',
+                'text-yellow-500',
+                'group-hover:text-cyan-400',
+                'group-hover:text-pink-500',
+                'group-hover:text-purple-500',
+                'group-hover:text-yellow-500'
+            ]
+        }
+    </script>
+
+    <style>
+        /* Cyberpunk Glitch & Glow Effects */
+        body {
+            background-color: #050505;
+            color: #ffffff;
+        }
+
+        /* Helper for hiding broken images and showing text fallback */
+        .logo-container img { display: block; }
+        .logo-container.fallback img { display: none; }
+        .logo-container .fallback-icon { display: none; }
+        .logo-container.fallback .fallback-icon { display: flex; }
+
+        /* Scroll Animation Utility */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .neon-text-purple {
+            text-shadow: 0 0 5px #9146FF, 0 0 10px #9146FF;
+        }
+        
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(145, 70, 255, 0.1) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100%; }
+        }
+
+        /* Glitch Button Effect */
+        .glitch-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .glitch-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .glitch-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Hero Video Placeholder Animation */
+        .hero-bg-anim {
+            background: radial-gradient(circle at center, #1a0b2e 0%, #050505 100%);
+            animation: pulse-bg 4s infinite alternate;
+        }
+        
+        @keyframes pulse-bg {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        /* Modal Backdrop */
+        .modal-backdrop {
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+
+    <!-- Global Scripts including Error Handlers -->
+    <script>
+        // Fallback to SVG Icon if image fails
+        function handleLogoError(img) {
+            const container = img.parentElement;
+            if (container) {
+                container.classList.add('fallback');
+            }
+        }
+    </script>
+</head>
+<body class="overflow-x-hidden antialiased selection:bg-cyber-purple selection:text-white">
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-cyber-charcoal border border-cyber-teal/50 p-8 rounded-lg max-w-md w-full relative shadow-[0_0_30px_rgba(0,240,255,0.1)]">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x"></i>
+            </button>
+            <h3 id="auth-title" class="text-2xl font-display font-bold text-white mb-2">Access The Stage</h3>
+            <p class="text-gray-400 mb-6 text-sm">Sign in to unlock exclusive Zoom audience links.</p>
+            
+            <!-- Google Sign In -->
+            <button id="google-signin-btn" class="w-full bg-white text-black font-bold py-3 rounded hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 mb-4">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Sign in with Google
+            </button>
+
+            <div class="relative mb-4">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-white/10"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-cyber-charcoal text-gray-500">Or continue with email</span>
+                </div>
+            </div>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-cyber-teal uppercase tracking-wider mb-1">Email</label>
+                    <input type="email" id="email" placeholder="fan@comedyhub.live" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber-teal transition-colors" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-cyber-teal uppercase tracking-wider mb-1">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber-teal transition-colors" required>
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-cyber-teal text-black font-bold py-3 rounded hover:bg-white transition-colors">
+                    ENTER VENUE
+                </button>
+            </form>
+            <p id="auth-error" class="text-red-500 text-xs text-center mt-2 hidden"></p>
+            
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-400">
+                    <span id="auth-mode-toggle" class="cursor-pointer hover:text-cyber-teal transition-colors">New here? <span class="text-cyber-teal font-bold underline">Create an Account</span></span>
+                </p>
+            </div>
+
+            <p class="mt-4 text-center text-xs text-gray-500 border-t border-white/5 pt-4">
+                Or join via <a href="https://KOComedy.com" target="_blank" class="text-cyber-teal hover:underline">KOComedy.com Email List</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Inquiry Modal -->
+    <div id="inquiry-modal" class="fixed inset-0 z-[100] hidden modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-cyber-charcoal border border-cyber-pink/50 p-8 rounded-lg max-w-lg w-full relative shadow-[0_0_30px_rgba(255,0,255,0.15)]">
+            <button id="close-inquiry-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x"></i>
+            </button>
+            <h3 class="text-2xl font-display font-bold text-white mb-2">Digital Experiences</h3>
+            <p class="text-gray-400 mb-6 text-sm">Book a Digital Experience, corporate event, or private show.</p>
+            
+            <!-- Formspree Endpoint Connected -->
+            <form action="https://formspree.io/f/maqdnzba" method="POST" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-cyber-pink uppercase tracking-wider mb-1">Name</label>
+                        <input type="text" name="name" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber-pink transition-colors" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-cyber-pink uppercase tracking-wider mb-1">Email</label>
+                        <input type="email" name="email" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber-pink transition-colors" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-cyber-pink uppercase tracking-wider mb-1">Inquiry Type</label>
+                    <select name="type" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber-pink transition-colors">
+                        <option value="residency">Digital Experience (Comedian)</option>
+                        <option value="corporate">Corporate Event</option>
+                        <option value="private">Private Party</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-cyber-pink uppercase tracking-wider mb-1">Message</label>
+                    <textarea name="message" rows="4" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:outline-none focus:border-cyber-pink transition-colors" placeholder="Tell us about your set or event..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-cyber-pink text-white font-bold py-3 rounded hover:bg-pink-600 transition-colors shadow-[0_0_15px_rgba(255,0,255,0.4)]">
+                    SEND INQUIRY
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-cyber-black/90 backdrop-blur-md border-b border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo Area with Smart Fallback -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group logo-container" id="nav-logo-container" onclick="window.scrollTo(0,0)">
+                    <img 
+                        class="h-12 w-12 rounded-full border-2 border-cyber-gold shadow-[0_0_10px_rgba(255,215,0,0.3)] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.6)] transition-all object-cover" 
+                        src="https://drive.google.com/uc?export=view&id=171cmJtmkga5fDr4y9v4AyIrcOhmbj0sQ" 
+                        alt="Comedy Hub Logo"
+                        onerror="handleLogoError(this)"
+                    >
+                    <!-- Fallback Icon (Gold Mic) -->
+                    <div class="fallback-icon h-12 w-12 rounded-full border-2 border-cyber-gold bg-cyber-black flex items-center justify-center text-cyber-gold shadow-[0_0_10px_rgba(255,215,0,0.3)]">
+                        <i data-lucide="mic" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-display font-bold text-xl tracking-wider text-white">COMEDY<span class="text-cyber-purple group-hover:text-cyber-pink transition-colors">HUB</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-8">
+                    <div class="flex items-baseline space-x-6">
+                        <a href="#twitch-live" class="text-cyber-purple hover:text-white transition-colors text-sm font-bold flex items-center gap-2 border border-cyber-purple/30 bg-cyber-purple/10 px-3 py-1.5 rounded-full hover:bg-cyber-purple hover:border-cyber-purple">
+                            <i data-lucide="twitch" class="w-4 h-4"></i> LIVE
+                        </a>
+                        <a href="#schedule" class="hover:text-cyber-teal transition-colors text-sm font-medium">The Schedule</a>
+                        <a href="#experiences" class="hover:text-cyber-pink transition-colors text-sm font-medium">Experiences</a>
+                        <a href="#about" class="hover:text-cyber-purple transition-colors text-sm font-medium">About</a>
+                    </div>
+                    
+                    <div id="nav-auth-section">
+                        <button id="signin-btn" class="flex items-center gap-2 bg-white/5 hover:bg-cyber-purple hover:text-white border border-white/10 px-4 py-2 rounded-full transition-all text-sm font-bold text-cyber-teal">
+                            <i data-lucide="user-circle" class="w-4 h-4"></i> SIGN IN
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                        <i data-lucide="menu" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-cyber-charcoal border-b border-cyber-purple/20" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#twitch-live" onclick="toggleMobileMenu()" class="text-cyber-purple hover:text-white block px-3 py-4 rounded-md text-base font-bold flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> WATCH LIVE</a>
+                <a href="#schedule" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-teal block px-3 py-4 rounded-md text-base font-medium">The Schedule</a>
+                <a href="#experiences" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-pink block px-3 py-4 rounded-md text-base font-medium">Experiences</a>
+                <a href="#about" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-purple block px-3 py-4 rounded-md text-base font-medium">About</a>
+                <button id="mobile-signin-btn" class="w-full text-left text-cyber-teal block px-3 py-4 rounded-md text-base font-medium font-display border-t border-white/10 mt-2">Sign In / Register</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Effects -->
+        <div class="absolute inset-0 hero-bg-anim z-0"></div>
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516280440614-6697288d5d38?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-cyber-black via-transparent to-cyber-black z-10"></div>
+        <div class="scanline"></div>
+
+        <!-- Content -->
+        <div class="relative z-20 text-center px-4 max-w-5xl mx-auto reveal-on-scroll">
+            <div class="inline-flex items-center gap-2 px-4 py-1 mb-6 border border-cyber-pink/50 rounded-full bg-cyber-pink/10 backdrop-blur-sm animate-pulse-slow">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-pink opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-cyber-pink"></span>
+                </span>
+                <span class="text-cyber-pink text-xs font-bold tracking-widest uppercase">Live Now on Twitch</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-black text-white mb-6 tracking-tight leading-none drop-shadow-[0_0_15px_rgba(145,70,255,0.5)]">
+                THE WORLD'S FIRST<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-purple via-cyber-teal to-cyber-purple bg-[length:200%_auto] animate-[gradient_3s_linear_infinite]">DIGITAL COMEDY CLUB</span>
+            </h1>
+            
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-300 font-light mb-10">
+                No Two-Drink Minimum. Front Row Seats from Your Couch. <br class="hidden md:block">The future of stand-up is strictly high-bandwidth.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#twitch-live" class="glitch-btn w-full sm:w-auto px-8 py-4 bg-cyber-purple hover:bg-purple-700 text-white font-bold rounded-none skew-x-[-10deg] border border-cyber-purple shadow-[0_0_15px_rgba(145,70,255,0.4)] transition-all transform hover:scale-105">
+                    <div class="skew-x-[10deg] flex items-center justify-center gap-2">
+                        <i data-lucide="twitch"></i> WATCH LIVE
+                    </div>
+                </a>
+                <button id="hero-join-btn" class="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/30 hover:border-cyber-teal hover:text-cyber-teal hover:bg-cyber-teal/10 text-white font-bold rounded-none skew-x-[-10deg] transition-all transform hover:scale-105">
+                    <div class="skew-x-[10deg]">JOIN ZOOM AUDIENCE</div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ticker / Social Proof -->
+    <div class="bg-cyber-purple/10 border-y border-cyber-purple/20 overflow-hidden py-3 backdrop-blur-sm">
+        <div class="whitespace-nowrap flex animate-[marquee_20s_linear_infinite]">
+            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">LIVE ON TWITCH</span>
+            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
+            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">STREAMING GLOBALLY</span>
+            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
+            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">PROFESSIONAL AUDIO</span>
+            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
+            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">LIVE MODERATION</span>
+            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
+            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">NO HECKLERS</span>
+             <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
+            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">LIVE ON TWITCH</span>
+            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
+            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">STREAMING GLOBALLY</span>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-cyber-charcoal relative">
+        <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center reveal-on-scroll">
+                <div class="relative group logo-container">
+                    <div class="absolute -inset-4 bg-cyber-teal/20 blur-xl rounded-lg group-hover:bg-cyber-teal/30 transition-all duration-700"></div>
+                    <!-- Smart Image with Fallback to Mic Icon -->
+                    <img 
+                        src="https://drive.google.com/uc?export=view&id=171cmJtmkga5fDr4y9v4AyIrcOhmbj0sQ" 
+                        alt="Comedy Hub Gold Seal" 
+                        class="relative rounded-lg border border-white/10 grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700 shadow-2xl w-full h-auto object-cover"
+                        onerror="handleLogoError(this)"
+                    >
+                    <div class="fallback-icon relative w-full aspect-square bg-cyber-black rounded-lg border border-cyber-gold flex items-center justify-center text-cyber-gold">
+                        <i data-lucide="mic" class="w-32 h-32"></i>
+                    </div>
+                    
+                    <div class="absolute -bottom-6 -right-6 bg-cyber-black p-4 border border-cyber-teal/50">
+                        <p class="font-display text-cyber-teal text-xl font-bold">EST. 2020</p>
+                        <p class="text-xs text-gray-400">DIGITAL ERA</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-cyber-teal font-display font-bold text-sm tracking-widest mb-2 uppercase">About Us</h2>
+                    <h3 class="text-4xl font-bold text-white mb-8">The Evolution of the Stage</h3>
+                    
+                    <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+                        <p>We started on the front lines of digital performance as Twitch’s first live comedy club. What began as a channel dedicated to bringing professional sets to a global chat room evolved into something much bigger. We realized that while the comedy world is global, the tour bus has limits.</p>
+                        
+                        <p>Today, Comedy Hub is no longer just a stream—it’s a full-scale digital venue. We’ve traded the logistics of the road for the power of the fiber-optic cable. By combining elite broadcast tech with the intimacy of a front-row seat, we provide touring comedians a way to reach the fans they can’t see in person.</p>
+                        
+                        <div class="border-l-4 border-cyber-purple pl-6 py-2 italic text-white font-medium bg-gradient-to-r from-cyber-purple/10 to-transparent">
+                            "We handle the tech, the security, and the atmosphere; you just bring the bits. Welcome to the next era of the comedy club."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Schedule -->
+    <section id="schedule" class="py-24 bg-cyber-black relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-cyber-pink/5 rounded-full blur-3xl animate-pulse-slow"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-white/10 pb-6 reveal-on-scroll">
+                <div>
+                    <h2 class="text-cyber-pink font-display font-bold text-sm tracking-widest mb-2 uppercase">The Guide</h2>
+                    <h3 class="text-4xl font-bold text-white">Live Schedule</h3>
+                </div>
+                <div class="mt-4 md:mt-0 flex flex-col md:items-end gap-2">
+                     <span class="px-3 py-1 bg-white/5 rounded text-sm text-gray-400 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span id="user-timezone">Detecting Timezone...</span>
+                     </span>
+                     <span class="text-xs text-cyber-teal hidden" id="login-status-msg">● Logged In: Zoom Access Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Schedule Grid -->
+            <div class="grid gap-6" id="schedule-grid">
+                <!-- Javascript will populate this -->
+                <div class="text-center py-12 text-gray-500">Loading Schedule...</div>
+            </div>
+            
+            <div class="mt-12 text-center p-6 bg-cyber-charcoal border border-white/5 rounded-lg max-w-2xl mx-auto reveal-on-scroll">
+                 <p class="text-gray-400 mb-4">Want the Zoom links emailed directly to you?</p>
+                 <a href="https://KOComedy.com" target="_blank" class="inline-flex items-center gap-2 text-cyber-teal hover:text-white font-bold transition-colors border-b border-cyber-teal hover:border-white pb-1">
+                    Join the KOComedy.com Email List <i data-lucide="external-link" class="w-4 h-4"></i>
+                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Digital Experiences (B2B) -->
+    <section id="experiences" class="py-24 bg-[#0a0a0c] relative">
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(145,70,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(145,70,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal-on-scroll">
+            <h2 class="text-cyber-teal font-display font-bold text-sm tracking-widest mb-2 uppercase">For Comedians</h2>
+            <h3 class="text-4xl md:text-5xl font-bold text-white mb-6">Digital Experiences</h3>
+            <p class="max-w-3xl mx-auto text-xl text-gray-400 mb-16">
+                Launch your own Digital Experience. Expand your reach beyond the club walls. We provide the professional broadcast tech, moderation, and monetization tools you need to host a global show from your living room.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-cyber-charcoal p-8 rounded-lg border border-white/5 hover:border-cyber-purple transition-all hover:-translate-y-2 group">
+                    <div class="w-16 h-16 bg-cyber-purple/20 rounded-full flex items-center justify-center mx-auto mb-6 text-cyber-purple group-hover:scale-110 transition-transform">
+                        <i data-lucide="server" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Pro-Grade Tech</h4>
+                    <p class="text-gray-400">We handle the OBS, the audio mixing, and the stream key. You just talk. No lag, no dropouts.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-cyber-charcoal p-8 rounded-lg border border-white/5 hover:border-cyber-teal transition-all hover:-translate-y-2 group">
+                    <div class="w-16 h-16 bg-cyber-teal/20 rounded-full flex items-center justify-center mx-auto mb-6 text-cyber-teal group-hover:scale-110 transition-transform">
+                        <i data-lucide="shield-check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Mod Squad</h4>
+                    <p class="text-gray-400">Our professional moderation team keeps the chat heckler-free so you can focus on the set.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-cyber-charcoal p-8 rounded-lg border border-white/5 hover:border-cyber-pink transition-all hover:-translate-y-2 group">
+                    <div class="w-16 h-16 bg-cyber-pink/20 rounded-full flex items-center justify-center mx-auto mb-6 text-cyber-pink group-hover:scale-110 transition-transform">
+                        <i data-lucide="globe" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Global Monetization</h4>
+                    <p class="text-gray-400">Turn global views into sales. Sell merch, take tips, and build a fanbase that pays.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 mb-20">
+                <button id="inquiry-btn" class="bg-white text-cyber-black font-bold py-4 px-10 rounded-full hover:bg-cyber-teal hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    Inquire Now
+                </button>
+            </div>
+            
+            <!-- Twitch Embed Section -->
+            <div id="twitch-live" class="max-w-5xl mx-auto w-full aspect-video bg-black border border-cyber-purple/30 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(145,70,255,0.2)] reveal-on-scroll">
+                <iframe
+                    src="https://player.twitch.tv/?channel=comedyhub&parent=localhost&parent=comedyhublive.com&parent=comedyhublive.github.io"
+                    height="100%"
+                    width="100%"
+                    allowfullscreen="true">
+                </iframe>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-cyber-black pt-16 pb-8 border-t border-white/10 reveal-on-scroll">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="font-display font-bold text-2xl tracking-wider text-white">COMEDY<span class="text-cyber-purple">HUB</span></span>
+                    </div>
+                    <p class="text-gray-500 max-w-sm">
+                        The world's premier digital comedy venue. Connecting comedians with fans through the power of the fiber-optic cable.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6">Platform</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="#schedule" class="hover:text-cyber-teal transition-colors">Schedule</a></li>
+                        <li><a href="#experiences" class="hover:text-cyber-teal transition-colors">Experiences</a></li>
+                        <li><button id="footer-signin-btn" class="hover:text-cyber-teal transition-colors">Sign In</button></li>
+                        <li><a href="https://KOComedy.com" class="hover:text-cyber-teal transition-colors">Join Email List</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6">Connect</h4>
+                    <div class="flex gap-4">
+                        <a href="https://x.com/ComedyHubLive" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-cyber-purple hover:text-white transition-all">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="https://www.instagram.com/comedyhublive/" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-pink-600 hover:text-white transition-all">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="https://www.facebook.com/ComedyHubLive/" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <!-- BlueSky Button with Correct Logo SVG -->
+                        <a href="https://bsky.app/profile/comedyhublive.bsky.social" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-400 hover:text-white transition-all" title="BlueSky">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current">
+                                <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565-.131 2.032-.241 4.357.646 6.821c1.279 3.552 3.45 5.404 6.337 6.408C3.213 14.976-.174 16.591.006 20.353c.09 1.887 1.411 2.981 3.23 2.981 2.955 0 6.6-4.8 8.764-8.744 2.164 3.944 5.809 8.744 8.764 8.744 1.819 0 3.14-1.094 3.23-2.981.18-3.762-3.207-5.377-6.977-7.124 2.887-1.004 5.058-2.856 6.337-6.408.887-2.464.777-4.789-.256-5.256-.659-.299-1.664-.621-4.3 1.24C20.046 4.747 17.087 8.686 16 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C6.566.944 5.561 1.266 4.902 1.565 3.869 2.032 3.759 4.357 4.646 6.821c1.279 3.552 3.45 5.404 6.337 6.408C7.213 14.976 3.826 16.591 4.006 20.353c.09 1.887 1.411 2.981 3.23 2.981 2.955 0 6.6-4.8 8.764-8.744 2.164 3.944 5.809 8.744 8.764 8.744 1.819 0 3.14-1.094 3.23-2.981.18-3.762-3.207-5.377-6.977-7.124 2.887-1.004 5.058-2.856 6.337-6.408.887-2.464.777-4.789-.256-5.256-.659-.299-1.664-.621-4.3 1.24C16.046 4.747 13.087 8.686 12 10.8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <p class="text-gray-600 mt-4 text-sm">@ComedyHubLive</p>
+                    <a href="mailto:Jay@ComedyHubLive.com" class="text-gray-600 hover:text-cyber-teal mt-2 text-sm block transition-colors flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4"></i> Jay@ComedyHubLive.com
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-sm">© 2024 Comedy Hub. All rights reserved.</p>
+                <div class="flex gap-6 text-sm text-gray-600">
+                    <a href="#" class="hover:text-white">Privacy</a>
+                    <a href="#" class="hover:text-white">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Logic & App Scripts -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signInWithPopup, 
+            GoogleAuthProvider,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ================================================================
+        // YOUR FIREBASE CONFIGURATION
+        // ================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjaljkcljMzqg5rSlFzZVxcmoWJtjAQ-Y",
+            authDomain: "comedyhub-5fc77.firebaseapp.com",
+            projectId: "comedyhub-5fc77",
+            storageBucket: "comedyhub-5fc77.firebasestorage.app",
+            messagingSenderId: "801740195555",
+            appId: "1:801740195555:web:cfa2da8cbf24160313a7d6",
+            measurementId: "G-J9RB7Z14WN"
+        };
+        // ================================================================
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // ----------------------------------------------------------------
+        // App Logic
+        // ----------------------------------------------------------------
+        
+        let currentUser = null;
+        let isSignUpMode = false;
+
+        const scheduleData = [
+            {
+                day: 'MON',
+                time: '5:00 PM PST',
+                title: 'Chirping Bird Comedy',
+                showSocials: [], // No show specific social
+                hosts: [
+                    { name: 'Hosted By Mark Anthony', url: 'https://www.instagram.com/markanthonycomedy' }
+                ],
+                desc: 'Start your week with high-altitude laughs.',
+                zoomLink: 'https://bit.ly/CBCmdy',
+                type: 'zoom'
+            },
+            {
+                day: 'TUE',
+                time: '6:00 PM PST',
+                title: 'Anthony Kapfer Digital Something',
+                showSocials: [{ url: 'https://www.instagram.com/anthonykapfer', icon: 'instagram' }],
+                hosts: [], // Host is in title effectively
+                desc: 'Digital absurdity and multimedia comedy.',
+                zoomLink: 'https://bit.ly/DSScmdy',
+                type: 'zoom'
+            },
+            // Removed Wednesday Show
+            {
+                day: 'FRI',
+                time: '5:00 PM PST',
+                title: 'The Living Room Show',
+                showSocials: [{ url: 'https://www.instagram.com/livingroomshow/', icon: 'instagram' }],
+                hosts: [
+                    { name: 'Hosted by Aaron Kominos-Smith', url: 'https://www.instagram.com/funnyaaron/' }
+                ],
+                desc: 'Intimate sets from the best living rooms in the world.',
+                zoomLink: 'https://bit.ly/TLRScmdy',
+                type: 'zoom'
+            },
+            {
+                day: 'FRI',
+                time: '7:00 PM PST',
+                title: 'KO Comedy & After Party',
+                showSocials: [{ url: 'https://www.instagram.com/kocomedyclub/', icon: 'instagram' }],
+                hosts: [
+                    { name: 'Hosted by Kelly Zemnickis', url: 'https://www.instagram.com/thelatvianfoodie' },
+                    { name: '& Desirée Walsh', url: 'https://www.instagram.com/desiree.lisa.walsh_' }
+                ],
+                desc: 'Join the party. (After Party is Zoom Only)',
+                zoomLink: 'https://bit.ly/KOcmdy',
+                type: 'zoom'
+            },
+            {
+                day: 'SAT',
+                time: '7:00 AM PST',
+                title: 'New Blerd Order',
+                showSocials: [{ url: 'https://www.instagram.com/newblerdorder/', icon: 'instagram' }],
+                hosts: [],
+                desc: 'Early risers get the best bits. Twitch Exclusive.',
+                zoomLink: null,
+                type: 'twitch'
+            },
+            {
+                day: 'SAT',
+                time: '3:00 PM PST',
+                title: 'The Jackie Mo Show',
+                showSocials: [{ url: 'https://www.instagram.com/jackiemonahan/', icon: 'instagram' }],
+                hosts: [],
+                desc: 'Saturday afternoon spotlight.',
+                zoomLink: 'https://bit.ly/JackieMo',
+                type: 'zoom'
+            },
+            {
+                day: 'SUN',
+                time: '11:00 AM PST',
+                title: 'Comedy Coffee (1st Sun/Month)',
+                showSocials: [],
+                hosts: [
+                    { name: 'Hosted by Kelly Zemnickis', url: 'https://www.instagram.com/thelatvianfoodie' }
+                ],
+                desc: 'Wake up and laugh. Monthly special.',
+                zoomLink: 'https://bit.ly/CmdyCoffee',
+                type: 'zoom'
+            },
+            {
+                day: 'SUN',
+                time: '7:00 PM PST',
+                title: 'KO Sunday',
+                showSocials: [{ url: 'https://www.instagram.com/kocomedyclub/', icon: 'instagram' }],
+                hosts: [
+                    { name: 'Hosted by Casey McNeal', url: 'https://www.instagram.com/caseyscomedy/' }
+                ],
+                desc: 'Closing the weekend with a knockout lineup.',
+                zoomLink: 'https://bit.ly/KOcmdySunday',
+                type: 'zoom'
+            }
+        ];
+
+        // UI Functions
+        function toggleAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.toggle('hidden');
+            document.getElementById('auth-error').classList.add('hidden'); // Clear errors
+        }
+
+        function toggleInquiryModal() {
+            const modal = document.getElementById('inquiry-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            const title = document.getElementById('auth-title');
+            const btn = document.getElementById('auth-submit-btn');
+            const toggleText = document.getElementById('auth-mode-toggle');
+            const errorMsg = document.getElementById('auth-error');
+
+            errorMsg.classList.add('hidden');
+
+            if (isSignUpMode) {
+                title.textContent = "Join The Club";
+                btn.textContent = "CREATE ACCOUNT";
+                toggleText.innerHTML = 'Already a member? <span class="text-cyber-teal font-bold underline">Sign In</span>';
+            } else {
+                title.textContent = "Access The Stage";
+                btn.textContent = "ENTER VENUE";
+                toggleText.innerHTML = 'New here? <span class="text-cyber-teal font-bold underline">Create an Account</span>';
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function updateUIForLogin(user) {
+            const msg = document.getElementById('login-status-msg');
+            const navAuth = document.getElementById('nav-auth-section');
+
+            if (user) {
+                // Logged In State
+                if (msg) msg.classList.remove('hidden');
+                if (navAuth) {
+                    navAuth.innerHTML = `
+                        <button id="signout-btn" class="flex items-center gap-2 bg-cyber-teal hover:bg-white text-black font-bold border border-cyber-teal px-4 py-2 rounded-full transition-all text-sm">
+                            <i data-lucide="user" class="w-4 h-4"></i> SIGN OUT
+                        </button>
+                    `;
+                    document.getElementById('signout-btn').addEventListener('click', handleSignOut);
+                }
+            } else {
+                // Logged Out State
+                if (msg) msg.classList.add('hidden');
+                if (navAuth) {
+                    navAuth.innerHTML = `
+                        <button id="signin-btn-dynamic" class="flex items-center gap-2 bg-white/5 hover:bg-cyber-purple hover:text-white border border-white/10 px-4 py-2 rounded-full transition-all text-sm font-bold text-cyber-teal">
+                            <i data-lucide="user-circle" class="w-4 h-4"></i> SIGN IN
+                        </button>
+                    `;
+                    document.getElementById('signin-btn-dynamic').addEventListener('click', toggleAuthModal);
+                }
+            }
+            if (window.lucide) lucide.createIcons();
+            renderSchedule();
+        }
+
+        // Database Helper
+        async function saveUserToDb(user) {
+            try {
+                const userRef = doc(db, "users", user.uid);
+                // Check if user exists first to avoid overwriting existing data if they just log in
+                const docSnap = await getDoc(userRef);
+                
+                if (!docSnap.exists()) {
+                    await setDoc(userRef, {
+                        email: user.email,
+                        marketingOptIn: true, 
+                        createdAt: serverTimestamp(),
+                        lastLogin: serverTimestamp(),
+                        uid: user.uid
+                    });
+                    console.log("User saved to DB");
+                } else {
+                     // Update last login
+                     await setDoc(userRef, { lastLogin: serverTimestamp() }, { merge: true });
+                }
+            } catch (e) {
+                console.error("Error saving user to DB: ", e);
+            }
+        }
+
+        // Auth Handlers
+        async function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('auth-error');
+            errorMsg.classList.add('hidden');
+
+            try {
+                let userCredential;
+                if (isSignUpMode) {
+                    userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await saveUserToDb(userCredential.user);
+                } else {
+                    userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    // Also save/update on login to capture returning users
+                    await saveUserToDb(userCredential.user);
+                }
+                toggleAuthModal();
+            } catch (error) {
+                let message = error.message;
+                if (error.code === 'auth/email-already-in-use') message = "That email is already registered.";
+                if (error.code === 'auth/weak-password') message = "Password should be at least 6 characters.";
+                if (error.code === 'auth/invalid-credential') message = "Invalid email or password.";
+                
+                errorMsg.textContent = message;
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        async function handleGoogleLogin() {
+            const errorMsg = document.getElementById('auth-error');
+            try {
+                const result = await signInWithPopup(auth, provider);
+                await saveUserToDb(result.user);
+                toggleAuthModal();
+            } catch (error) {
+                errorMsg.textContent = error.message;
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        async function handleSignOut() {
+            try {
+                await signOut(auth);
+                // UI updates automatically via onAuthStateChanged
+            } catch (error) {
+                console.error("Sign Out Error", error);
+            }
+        }
+
+        // Render Schedule based on Auth State
+        function renderSchedule() {
+            const grid = document.getElementById('schedule-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            scheduleData.forEach(show => {
+                let accentColor = 'cyber-purple';
+                let hoverBorderClass = 'hover:border-purple-500/50';
+                let textColorClass = 'text-purple-500';
+                let groupHoverTextClass = 'group-hover:text-purple-500';
+
+                if (show.type === 'zoom-only') { 
+                    accentColor = 'cyber-gold'; 
+                    hoverBorderClass = 'hover:border-yellow-500/50';
+                    textColorClass = 'text-yellow-500';
+                    groupHoverTextClass = 'group-hover:text-yellow-500';
+                }
+                if (show.type === 'twitch') { 
+                    accentColor = 'cyber-pink'; 
+                    hoverBorderClass = 'hover:border-pink-500/50';
+                    textColorClass = 'text-pink-500';
+                    groupHoverTextClass = 'group-hover:text-pink-500';
+                }
+                if (show.type === 'zoom') { 
+                    accentColor = 'cyber-teal'; 
+                    hoverBorderClass = 'hover:border-cyan-400/50';
+                    textColorClass = 'text-cyan-400';
+                    groupHoverTextClass = 'group-hover:text-cyan-400';
+                }
+
+                let actionBtn = '';
+                if (show.type === 'twitch') {
+                    actionBtn = `
+                        <a href="https://twitch.tv/comedyhub" target="_blank" class="w-full md:w-auto px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white rounded font-medium flex items-center justify-center gap-2 transition-colors">
+                            <i data-lucide="twitch" class="w-4 h-4"></i> Watch on Twitch
+                        </a>`;
+                } else {
+                    if (currentUser) {
+                         actionBtn = `
+                            <a href="${show.zoomLink}" target="_blank" class="w-full md:w-auto px-6 py-3 bg-cyber-teal hover:bg-white text-black hover:text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                                <i data-lucide="video" class="w-4 h-4"></i> JOIN ZOOM AUDIENCE
+                            </a>`;
+                    } else {
+                        actionBtn = `
+                            <button class="signin-trigger w-full md:w-auto px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-300 rounded font-medium flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="lock" class="w-4 h-4"></i> Sign In for Zoom Link
+                            </button>`;
+                    }
+                }
+
+                // --- Generate Inline Social Buttons for Show Title ---
+                let showSocialsHtml = '';
+                if (show.showSocials && show.showSocials.length > 0) {
+                    showSocialsHtml = show.showSocials.map(social => `
+                        <a href="${social.url}" target="_blank" class="text-gray-400 hover:text-white transition-colors ml-2 inline-flex items-center" title="Show Social">
+                            <i data-lucide="${social.icon}" class="w-4 h-4"></i>
+                        </a>
+                    `).join('');
+                }
+
+                // --- Generate Host Line(s) with Inline Socials ---
+                let hostsHtml = '';
+                if (show.hosts && show.hosts.length > 0) {
+                    hostsHtml = show.hosts.map(host => {
+                        let linkHtml = '';
+                        if (host.url) {
+                            linkHtml = `
+                                <a href="${host.url}" target="_blank" class="text-gray-400 hover:text-white transition-colors ml-1 inline-flex items-center" title="Host Social">
+                                    <i data-lucide="instagram" class="w-4 h-4"></i>
+                                </a>
+                            `;
+                        }
+                        return `<div class="flex items-center mb-1"><span class="text-gray-300 text-sm font-medium">${host.name}</span>${linkHtml}</div>`;
+                    }).join('');
+                }
+
+                const card = document.createElement('div');
+                card.className = `group bg-cyber-charcoal border border-white/5 ${hoverBorderClass} transition-all duration-300 p-6 flex flex-col md:flex-row gap-6 items-center reveal-on-scroll`;
+                card.innerHTML = `
+                    <div class="flex-shrink-0 w-full md:w-32 text-center md:text-left">
+                        <span class="block ${textColorClass} font-display font-bold text-2xl">${show.day}</span>
+                        <span class="block text-white text-sm opacity-80">${show.time}</span>
+                    </div>
+                    <div class="flex-grow text-center md:text-left border-l-0 md:border-l border-white/10 md:pl-6">
+                        <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                            ${show.type === 'zoom-only' ? '<span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-500 text-[10px] font-bold uppercase rounded border border-yellow-500/20">Zoom Exclusive</span>' : ''}
+                             ${show.type === 'twitch' ? '<span class="px-2 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] font-bold uppercase rounded border border-purple-500/20">Twitch Only</span>' : ''}
+                        </div>
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
+                            <h4 class="text-xl font-bold text-white ${groupHoverTextClass} transition-colors">${show.title}</h4>
+                            ${showSocialsHtml}
+                        </div>
+                        <div class="mb-3">
+                            ${hostsHtml}
+                        </div>
+                        <p class="text-gray-400 mb-3 text-sm">${show.desc}</p>
+                    </div>
+                    <div class="flex-shrink-0 w-full md:w-auto">
+                        ${actionBtn}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.querySelectorAll('.signin-trigger').forEach(btn => {
+                btn.addEventListener('click', toggleAuthModal);
+            });
+
+            if (window.lucide) lucide.createIcons();
+            initObserver();
+        }
+
+        function initObserver() {
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) entry.target.classList.add('is-visible');
+                    });
+                }, { threshold: 0.1 });
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+            } else {
+                document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('is-visible'));
+            }
+        }
+
+        // Initialization Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            
+            // Timezone
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const tzDisplay = document.getElementById('user-timezone');
+            if(tzDisplay) tzDisplay.textContent = userTimezone;
+
+            // Event Listeners for Static Elements
+            document.getElementById('signin-btn')?.addEventListener('click', toggleAuthModal);
+            document.getElementById('mobile-signin-btn')?.addEventListener('click', toggleAuthModal);
+            document.getElementById('hero-join-btn')?.addEventListener('click', toggleAuthModal);
+            document.getElementById('close-modal-btn')?.addEventListener('click', toggleAuthModal);
+            document.getElementById('footer-signin-btn')?.addEventListener('click', toggleAuthModal);
+            
+            // New Listeners for Auth
+            document.getElementById('login-form')?.addEventListener('submit', handleAuthSubmit);
+            document.getElementById('auth-mode-toggle')?.addEventListener('click', toggleAuthMode);
+            document.getElementById('google-signin-btn')?.addEventListener('click', handleGoogleLogin);
+
+            // New Listeners for Inquiry
+            document.getElementById('inquiry-btn')?.addEventListener('click', toggleInquiryModal);
+            document.getElementById('close-inquiry-btn')?.addEventListener('click', toggleInquiryModal);
+
+            // Expose for mobile menu
+            window.toggleMobileMenu = toggleMobileMenu; 
+            window.toggleAuthModal = toggleAuthModal; // Fallback for inline onclicks
+
+            // Render initial (logged out) schedule
+            renderSchedule();
+
+            // Listen for Auth Changes
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                updateUIForLogin(user);
+            });
+        });
+    </script>
+</body>
+</html>
