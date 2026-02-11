@@ -152,8 +152,17 @@
 
     <!-- Global Scripts including Error Handlers -->
     <script>
-        // Fallback to SVG Icon if image fails
+        // Smart Error Handler: Tries filename variants before showing fallback icon
         function handleLogoError(img) {
+            // 1. If we haven't tried the space-separated version yet, try it now.
+            if (!img.dataset.triedSpaces) {
+                img.dataset.triedSpaces = "true";
+                // Try the filename with spaces (URL encoded)
+                img.src = "Comedy%20Hub%20Logo%20gold.jpg";
+                return;
+            }
+            
+            // 2. If we have tried both and it still fails, show the fallback icon.
             const container = img.parentElement;
             if (container) {
                 container.classList.add('fallback');
@@ -271,7 +280,7 @@
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group logo-container" id="nav-logo-container" onclick="window.scrollTo(0,0)">
                     <img 
                         class="h-12 w-12 rounded-full border-2 border-cyber-gold shadow-[0_0_10px_rgba(255,215,0,0.3)] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.6)] transition-all object-cover" 
-                        src="https://drive.google.com/uc?export=view&id=171cmJtmkga5fDr4y9v4AyIrcOhmbj0sQ" 
+                        src="ComedyHubLogogold.jpg?v=2" 
                         alt="Comedy Hub Logo"
                         onerror="handleLogoError(this)"
                     >
@@ -389,7 +398,7 @@
                     <div class="absolute -inset-4 bg-cyber-teal/20 blur-xl rounded-lg group-hover:bg-cyber-teal/30 transition-all duration-700"></div>
                     <!-- Smart Image with Fallback to Mic Icon -->
                     <img 
-                        src="https://drive.google.com/uc?export=view&id=171cmJtmkga5fDr4y9v4AyIrcOhmbj0sQ" 
+                        src="ComedyHubLogogold.jpg?v=2" 
                         alt="Comedy Hub Gold Seal" 
                         class="relative rounded-lg border border-white/10 grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700 shadow-2xl w-full h-auto object-cover"
                         onerror="handleLogoError(this)"
