@@ -152,17 +152,8 @@
 
     <!-- Global Scripts including Error Handlers -->
     <script>
-        // Smart Error Handler: Tries filename variants before showing fallback icon
+        // Fallback to SVG Icon if image fails
         function handleLogoError(img) {
-            // 1. If we haven't tried the space-separated version yet, try it now.
-            if (!img.dataset.triedSpaces) {
-                img.dataset.triedSpaces = "true";
-                // Try the filename with spaces (URL encoded)
-                img.src = "Comedy%20Hub%20Logo%20gold.jpg";
-                return;
-            }
-            
-            // 2. If we have tried both and it still fails, show the fallback icon.
             const container = img.parentElement;
             if (container) {
                 container.classList.add('fallback');
@@ -340,7 +331,7 @@
 
         <!-- Content -->
         <div class="relative z-20 text-center px-4 max-w-5xl mx-auto reveal-on-scroll">
-            <div class="inline-flex items-center gap-2 px-4 py-1 mb-6 border border-cyber-pink/50 rounded-full bg-cyber-pink/10 backdrop-blur-sm animate-pulse-slow">
+            <div id="live-indicator" class="hidden inline-flex items-center gap-2 px-4 py-1 mb-6 border border-cyber-pink/50 rounded-full bg-cyber-pink/10 backdrop-blur-sm animate-pulse-slow">
                 <span class="relative flex h-3 w-3">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-pink opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-3 w-3 bg-cyber-pink"></span>
@@ -512,14 +503,10 @@
                 </button>
             </div>
             
-            <!-- Twitch Embed Section -->
+            <!-- Twitch Embed Section (JS Player) -->
             <div id="twitch-live" class="max-w-5xl mx-auto w-full aspect-video bg-black border border-cyber-purple/30 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(145,70,255,0.2)] reveal-on-scroll">
-                <iframe
-                    src="https://player.twitch.tv/?channel=comedyhub&parent=localhost&parent=comedyhublive.com&parent=comedyhublive.github.io"
-                    height="100%"
-                    width="100%"
-                    allowfullscreen="true">
-                </iframe>
+                <!-- The player will be rendered here by JS -->
+                <div id="twitch-embed" class="w-full h-full"></div>
             </div>
 
         </div>
@@ -997,6 +984,51 @@
             }
         }
 
+        // Twitch Player Logic
+        function initTwitchPlayer() {
+            const embedContainer = document.getElementById('twitch-embed');
+            if(!embedContainer) return;
+
+            // Clear previous if any
+            embedContainer.innerHTML = '';
+
+            const options = {
+                width: '100%',
+                height: '100%',
+                channel: "comedyhub",
+                // IMPORTANT: Add all domains where this might run to the parent list
+                parent: ["localhost", "comedyhublive.com", "comedyhublive.github.io"],
+                layout: "video",
+                autoplay: false // Don't autoplay to save bandwidth unless user clicks
+            };
+
+            const player = new Twitch.Embed("twitch-embed", options);
+
+            player.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+                console.log('Twitch Player Ready');
+                checkStreamStatus(player);
+            });
+            
+            // Poll for stream status occasionally
+            setInterval(() => checkStreamStatus(player), 60000);
+        }
+
+        function checkStreamStatus(player) {
+            // Note: The client-side embed API doesn't expose a direct "isLive" property easily 
+            // without full API access (which requires backend).
+            // However, we can infer some state or just let the player handle the UI.
+            // A common trick is to check if the player is playing (which often implies live for channel embeds).
+            
+            // BETTER APPROACH for static site: 
+            // We cannot query the Twitch API directly securely from client-side without a backend proxy to hide the token.
+            // So we will default the "Live" badge to hidden, and rely on the player UI itself to show "Offline" or the stream.
+            // If you want a TRUE live indicator, you need a tiny backend service (like a Cloud Function) to query Twitch API.
+            
+            // For now, we will leave the indicator HIDDEN by default as requested to avoid flashing incorrect state.
+            // The badge is strictly manual or requires backend logic. 
+            // Since this is a static site, we keep it simple: Let the video player be the indicator.
+        }
+
         // Initialization Logic
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) lucide.createIcons();
@@ -1028,6 +1060,9 @@
 
             // Render initial (logged out) schedule
             renderSchedule();
+
+            // Init Twitch
+            initTwitchPlayer();
 
             // Listen for Auth Changes
             onAuthStateChanged(auth, (user) => {
