@@ -9,6 +9,9 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Twitch Embed Script -->
+    <script src="https://embed.twitch.tv/embed/v1.js"></script>
+
     <!-- Fonts: Orbitron for Cyber headers, Inter for readability -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -992,13 +995,20 @@
             // Clear previous if any
             embedContainer.innerHTML = '';
 
-            // 1. Define standard domains
-            const parents = ["localhost", "comedyhublive.com", "comedyhublive.github.io"];
+            const parents = ["localhost", "comedyhublive.com", "comedyhublive.github.io", "127.0.0.1"];
             
-            // 2. Automatically add the current domain (fixes preview/canvas issues)
+            // Aggressively add current hostname to fix preview/canvas issues
             const currentHost = window.location.hostname;
-            if (currentHost && !parents.includes(currentHost) && currentHost !== '') {
+            if (currentHost && !parents.includes(currentHost)) {
                 parents.push(currentHost);
+            }
+
+            console.log("Twitch Embed Parents:", parents); // Debugging
+
+            // Check if protocol is file: which Twitch blocks
+            if (window.location.protocol === 'file:') {
+                 embedContainer.innerHTML = '<div class="flex items-center justify-center h-full text-center p-4 text-cyber-pink border border-cyber-pink/50 rounded bg-cyber-pink/10">Twitch embeds do not work when opening HTML files directly. Please use a local server or upload to GitHub.</div>';
+                 return;
             }
 
             const options = {
@@ -1007,29 +1017,37 @@
                 channel: "comedyhub",
                 parent: parents,
                 layout: "video",
-                autoplay: true, // Try to autoplay (muted)
-                muted: true     // Required for autoplay in most browsers
+                autoplay: true,
+                muted: true
             };
+
+            // Check if Twitch script loaded
+            if (typeof Twitch === 'undefined') {
+                embedContainer.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500">Twitch Player failed to load script. Check AdBlock.</div>';
+                return;
+            }
 
             const player = new Twitch.Embed("twitch-embed", options);
 
-            // 3. Smart "Live" Badge Logic
-            // These events trigger when the player detects stream status changes
             player.addEventListener(Twitch.Embed.ONLINE, () => {
-                console.log('Channel is Online - Showing Badge');
-                const badge = document.getElementById('live-indicator');
-                if(badge) badge.classList.remove('hidden');
+                console.log('Online');
+                document.getElementById('live-indicator')?.classList.remove('hidden');
             });
 
             player.addEventListener(Twitch.Embed.OFFLINE, () => {
-                console.log('Channel is Offline - Hiding Badge');
-                const badge = document.getElementById('live-indicator');
-                if(badge) badge.classList.add('hidden');
+                console.log('Offline');
+                document.getElementById('live-indicator')?.classList.add('hidden');
             });
-
-            player.addEventListener(Twitch.Embed.VIDEO_READY, () => {
-                console.log('Twitch Player Ready');
-            });
+            
+            // Backup check for live status
+            setInterval(() => {
+                 try {
+                     const video = player.getPlayer();
+                     if (video && !video.isPaused()) {
+                          document.getElementById('live-indicator')?.classList.remove('hidden');
+                     }
+                 } catch(e) {}
+            }, 30000);
         }
 
         // Initialization Logic
