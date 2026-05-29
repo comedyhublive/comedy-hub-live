@@ -6,16 +6,21 @@
     <title>Comedy Hub | The World's First Digital Comedy Club</title>
     <meta name="description" content="Live stand-up comedy from your couch. The world's first digital comedy venue offering global streams and digital experiences.">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Twitch Embed Script -->
     <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
+    <!-- Fonts: Orbitron for Cyber headers, Inter for readability -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     
+    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Custom Config & Styles -->
     <script>
         tailwind.config = {
             theme: {
@@ -148,6 +153,7 @@
         }
     </style>
 
+    <!-- Global Scripts including Error Handlers -->
     <script>
         // Fallback to SVG Icon if image fails
         function handleLogoError(img) {
@@ -160,6 +166,7 @@
 </head>
 <body class="overflow-x-hidden antialiased selection:bg-cyber-purple selection:text-white">
 
+    <!-- Auth Modal -->
     <div id="auth-modal" class="fixed inset-0 z-[100] hidden modal-backdrop flex items-center justify-center p-4">
         <div class="bg-cyber-charcoal border border-cyber-teal/50 p-8 rounded-lg max-w-md w-full relative shadow-[0_0_30px_rgba(0,240,255,0.1)]">
             <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white">
@@ -168,6 +175,7 @@
             <h3 id="auth-title" class="text-2xl font-display font-bold text-white mb-2">Access The Stage</h3>
             <p class="text-gray-400 mb-6 text-sm">Sign in to unlock exclusive Zoom audience links.</p>
             
+            <!-- Google Sign In -->
             <button id="google-signin-btn" class="w-full bg-white text-black font-bold py-3 rounded hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 mb-4">
                 <svg class="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -214,6 +222,7 @@
         </div>
     </div>
 
+    <!-- Inquiry Modal -->
     <div id="inquiry-modal" class="fixed inset-0 z-[100] hidden modal-backdrop flex items-center justify-center p-4">
         <div class="bg-cyber-charcoal border border-cyber-pink/50 p-8 rounded-lg max-w-lg w-full relative shadow-[0_0_30px_rgba(255,0,255,0.15)]">
             <button id="close-inquiry-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white">
@@ -222,6 +231,7 @@
             <h3 class="text-2xl font-display font-bold text-white mb-2">Digital Experiences</h3>
             <p class="text-gray-400 mb-6 text-sm">Book a Digital Experience, corporate event, or private show.</p>
             
+            <!-- Formspree Endpoint Connected -->
             <form action="https://formspree.io/f/maqdnzba" method="POST" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -256,9 +266,11 @@
         </div>
     </div>
 
+    <!-- Navbar -->
     <nav class="fixed w-full z-50 bg-cyber-black/90 backdrop-blur-md border-b border-white/10 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
+                <!-- Logo Area with Smart Fallback -->
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group logo-container" id="nav-logo-container" onclick="window.scrollTo(0,0)">
                     <img 
                         class="h-12 w-12 rounded-full border-2 border-cyber-gold shadow-[0_0_10px_rgba(255,215,0,0.3)] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.6)] transition-all object-cover" 
@@ -266,12 +278,14 @@
                         alt="Comedy Hub Logo"
                         onerror="handleLogoError(this)"
                     >
+                    <!-- Fallback Icon (Gold Mic) -->
                     <div class="fallback-icon h-12 w-12 rounded-full border-2 border-cyber-gold bg-cyber-black flex items-center justify-center text-cyber-gold shadow-[0_0_10px_rgba(255,215,0,0.3)]">
                         <i data-lucide="mic" class="w-6 h-6"></i>
                     </div>
                     <span class="font-display font-bold text-xl tracking-wider text-white">COMEDY<span class="text-cyber-purple group-hover:text-cyber-pink transition-colors">HUB</span></span>
                 </div>
                 
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center gap-8">
                     <div class="flex items-baseline space-x-6">
                         <a href="#twitch-live" class="text-cyber-purple hover:text-white transition-colors text-sm font-bold flex items-center gap-2 border border-cyber-purple/30 bg-cyber-purple/10 px-3 py-1.5 rounded-full hover:bg-cyber-purple hover:border-cyber-purple">
@@ -289,6 +303,7 @@
                     </div>
                 </div>
 
+                <!-- Mobile Menu Button -->
                 <div class="-mr-2 flex md:hidden">
                     <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
                         <i data-lucide="menu" class="w-8 h-8"></i>
@@ -297,6 +312,7 @@
             </div>
         </div>
 
+        <!-- Mobile Menu -->
         <div class="md:hidden hidden bg-cyber-charcoal border-b border-cyber-purple/20" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#twitch-live" onclick="toggleMobileMenu()" class="text-cyber-purple hover:text-white block px-3 py-4 rounded-md text-base font-bold flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> WATCH LIVE</a>
@@ -308,12 +324,15 @@
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Effects -->
         <div class="absolute inset-0 hero-bg-anim z-0"></div>
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516280440614-6697288d5d38?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-cyber-black via-transparent to-cyber-black z-10"></div>
         <div class="scanline"></div>
 
+        <!-- Content -->
         <div class="relative z-20 text-center px-4 max-w-5xl mx-auto reveal-on-scroll">
             <div id="live-indicator" class="hidden inline-flex items-center gap-2 px-4 py-1 mb-6 border border-cyber-pink/50 rounded-full bg-cyber-pink/10 backdrop-blur-sm animate-pulse-slow">
                 <span class="relative flex h-3 w-3">
@@ -345,6 +364,7 @@
         </div>
     </header>
 
+    <!-- Ticker / Social Proof -->
     <div class="bg-cyber-purple/10 border-y border-cyber-purple/20 overflow-hidden py-3 backdrop-blur-sm">
         <div class="whitespace-nowrap flex animate-[marquee_20s_linear_infinite]">
             <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">LIVE ON TWITCH</span>
@@ -363,12 +383,14 @@
         </div>
     </div>
 
+    <!-- About Section -->
     <section id="about" class="py-24 bg-cyber-charcoal relative">
         <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center reveal-on-scroll">
                 <div class="relative group logo-container">
                     <div class="absolute -inset-4 bg-cyber-teal/20 blur-xl rounded-lg group-hover:bg-cyber-teal/30 transition-all duration-700"></div>
+                    <!-- Smart Image with Fallback to Mic Icon -->
                     <img 
                         src="ComedyHubLogogold.jpg?v=2" 
                         alt="Comedy Hub Gold Seal" 
@@ -403,7 +425,9 @@
         </div>
     </section>
 
+    <!-- The Schedule -->
     <section id="schedule" class="py-24 bg-cyber-black relative overflow-hidden">
+        <!-- Decoration -->
         <div class="absolute top-0 right-0 w-96 h-96 bg-cyber-pink/5 rounded-full blur-3xl animate-pulse-slow"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -421,35 +445,46 @@
                 </div>
             </div>
 
+            <!-- Highlighted Special Event -->
             <div class="mb-12 bg-gradient-to-r from-cyber-purple/10 to-cyber-teal/10 border border-cyber-teal/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.15)] reveal-on-scroll">
                 <div class="flex flex-col md:flex-row">
+                    <!-- Flyer Image -->
                     <div class="w-full md:w-2/5 border-b md:border-b-0 md:border-r border-white/10">
-                        <img src="sammy sues the hour.png" alt="Sammy Sues the Hour w/ Sammy Obeid Flyer" class="w-full h-full object-cover">
+                        <img src="Sammy Hour Generic.png" alt="Sammy Does an Hour w/ Sammy Obeid Flyer" class="w-full h-full object-cover">
                     </div>
                     
+                    <!-- Event Details -->
                     <div class="w-full md:w-3/5 p-8 flex flex-col justify-center relative">
+                        <!-- Decorative glow -->
                         <div class="absolute top-0 right-0 w-32 h-32 bg-cyber-pink/10 rounded-full blur-2xl pointer-events-none"></div>
                         
                         <div class="relative z-10">
+                            <!-- Flashing Special Event Badge -->
                             <span class="inline-block px-3 py-1 mb-4 bg-cyber-pink text-white text-[12.5px] animate-[pulse_1s_ease-in-out_infinite] font-bold uppercase tracking-wider rounded border border-cyber-pink/50">
                                 Special Event
                             </span>
                             
                             <h3 class="text-3xl md:text-5xl font-display font-black text-white mb-2 uppercase drop-shadow-[0_0_10px_rgba(0,240,255,0.3)]">
-                                Sammy Sues<br>The Hour
+                                Sammy Does<br>An Hour
                             </h3>
-                            <p class="text-xl text-cyber-teal font-medium mb-6">w/ Sammy Obeid</p>
+                            <div class="text-xl text-cyber-teal font-medium mb-6 flex items-center gap-2">
+                                w/ Sammy Obeid
+                                <a href="https://www.instagram.com/sammyobeid/" target="_blank" class="text-cyber-teal hover:text-white transition-colors" title="Sammy Obeid on Instagram">
+                                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                                </a>
+                            </div>
                             
                             <div class="flex flex-col gap-2 mb-6">
                                 <div class="flex items-center gap-2 text-white font-bold">
                                     <i data-lucide="calendar" class="w-5 h-5 text-cyber-gold"></i>
-                                    Thursday, May 21st | 7:00 PM PST
+                                    June's Show Date Announced Soon
                                 </div>
                                 <p class="text-gray-400 text-sm max-w-lg">
-                                    Don't miss this special hour! Tune in live on Twitch or join the interactive Zoom audience for the front-row digital comedy club experience.
+                                    Sammy tries out all of his new material before taking it on the road. Catch the fresh bits first on Twitch or join the interactive Zoom audience!
                                 </p>
                             </div>
                             
+                            <!-- Action Buttons -->
                             <div class="flex flex-col sm:flex-row gap-4 mt-4">
                                 <a href="https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09&mc_cid=825ffdba58&mc_eid=1c3738da46#success" target="_blank" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
                                     <i data-lucide="video" class="w-5 h-5"></i> JOIN ZOOM AUDIENCE
@@ -463,7 +498,9 @@
                 </div>
             </div>
 
+            <!-- Dynamic Schedule Grid -->
             <div class="grid gap-6" id="schedule-grid">
+                <!-- Javascript will populate this -->
                 <div class="text-center py-12 text-gray-500">Loading Schedule...</div>
             </div>
             
@@ -476,6 +513,7 @@
         </div>
     </section>
 
+    <!-- Digital Experiences (B2B) -->
     <section id="experiences" class="py-24 bg-[#0a0a0c] relative">
         <div class="absolute inset-0 bg-[linear-gradient(rgba(145,70,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(145,70,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
         
@@ -487,6 +525,7 @@
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
                 <div class="bg-cyber-charcoal p-8 rounded-lg border border-white/5 hover:border-cyber-purple transition-all hover:-translate-y-2 group">
                     <div class="w-16 h-16 bg-cyber-purple/20 rounded-full flex items-center justify-center mx-auto mb-6 text-cyber-purple group-hover:scale-110 transition-transform">
                         <i data-lucide="server" class="w-8 h-8"></i>
@@ -495,6 +534,7 @@
                     <p class="text-gray-400">We handle the OBS, the audio mixing, and the stream key. You just talk. No lag, no dropouts.</p>
                 </div>
 
+                <!-- Feature 2 -->
                 <div class="bg-cyber-charcoal p-8 rounded-lg border border-white/5 hover:border-cyber-teal transition-all hover:-translate-y-2 group">
                     <div class="w-16 h-16 bg-cyber-teal/20 rounded-full flex items-center justify-center mx-auto mb-6 text-cyber-teal group-hover:scale-110 transition-transform">
                         <i data-lucide="shield-check" class="w-8 h-8"></i>
@@ -503,6 +543,7 @@
                     <p class="text-gray-400">Our professional moderation team keeps the chat heckler-free so you can focus on the set.</p>
                 </div>
 
+                <!-- Feature 3 -->
                 <div class="bg-cyber-charcoal p-8 rounded-lg border border-white/5 hover:border-cyber-pink transition-all hover:-translate-y-2 group">
                     <div class="w-16 h-16 bg-cyber-pink/20 rounded-full flex items-center justify-center mx-auto mb-6 text-cyber-pink group-hover:scale-110 transition-transform">
                         <i data-lucide="globe" class="w-8 h-8"></i>
@@ -518,13 +559,16 @@
                 </button>
             </div>
             
+            <!-- Twitch Embed Section (JS Player) -->
             <div id="twitch-live" class="max-w-5xl mx-auto w-full aspect-video bg-black border border-cyber-purple/30 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(145,70,255,0.2)] reveal-on-scroll">
+                <!-- The player will be rendered here by JS -->
                 <div id="twitch-embed" class="w-full h-full"></div>
             </div>
 
         </div>
     </section>
 
+    <!-- Footer -->
     <footer class="bg-cyber-black pt-16 pb-8 border-t border-white/10 reveal-on-scroll">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -559,6 +603,7 @@
                         <a href="https://www.facebook.com/ComedyHubLive/" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all">
                             <i data-lucide="facebook" class="w-5 h-5"></i>
                         </a>
+                        <!-- BlueSky Button with Correct Logo SVG -->
                         <a href="https://bsky.app/profile/comedyhublive.bsky.social" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-400 hover:text-white transition-all" title="BlueSky">
                             <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current">
                                 <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565-.131 2.032-.241 4.357.646 6.821c1.279 3.552 3.45 5.404 6.337 6.408C3.213 14.976-.174 16.591.006 20.353c.09 1.887 1.411 2.981 3.23 2.981 2.955 0 6.6-4.8 8.764-8.744 2.164 3.944 5.809 8.744 8.764 8.744 1.819 0 3.14-1.094 3.23-2.981.18-3.762-3.207-5.377-6.977-7.124 2.887-1.004 5.058-2.856 6.337-6.408.887-2.464.777-4.789-.256-5.256-.659-.299-1.664-.621-4.3 1.24C20.046 4.747 17.087 8.686 16 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C6.566.944 5.561 1.266 4.902 1.565 3.869 2.032 3.759 4.357 4.646 6.821c1.279 3.552 3.45 5.404 6.337 6.408C7.213 14.976 3.826 16.591 4.006 20.353c.09 1.887 1.411 2.981 3.23 2.981 2.955 0 6.6-4.8 8.764-8.744 2.164 3.944 5.809 8.744 8.764 8.744 1.819 0 3.14-1.094 3.23-2.981.18-3.762-3.207-5.377-6.977-7.124 2.887-1.004 5.058-2.856 6.337-6.408.887-2.464.777-4.789-.256-5.256-.659-.299-1.664-.621-4.3 1.24C16.046 4.747 13.087 8.686 12 10.8z"/>
@@ -582,6 +627,7 @@
         </div>
     </footer>
 
+    <!-- Firebase Logic & App Scripts -->
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -634,9 +680,9 @@
                 day: 'MON',
                 time: '5:00 PM PST',
                 title: 'Chirping Bird Comedy',
-                showSocials: [], // No show specific social
+                showSocials: [], 
                 hosts: [
-                    { name: 'Hosted By Mark Anthony', url: 'https://www.instagram.com/markanthonycomedy' }
+                    { name: 'Hosted By Mark Anthony', url: 'https://www.instagram.com/markanthonycomedy/' }
                 ],
                 desc: 'Start your week with high-altitude laughs.',
                 zoomLink: 'https://bit.ly/CBCmdy',
@@ -646,18 +692,19 @@
                 day: 'TUE',
                 time: '6:00 PM PST',
                 title: 'Anthony Kapfer Digital Something',
-                showSocials: [{ url: 'https://www.instagram.com/anthonykapfer', icon: 'instagram' }],
-                hosts: [], // Host is in title effectively
+                showSocials: [],
+                hosts: [
+                    { name: 'Hosted by Anthony Kapfer', url: 'https://www.instagram.com/anthonykapfer/' }
+                ],
                 desc: 'Digital absurdity and multimedia comedy.',
                 zoomLink: 'https://bit.ly/DSScmdy',
                 type: 'zoom'
             },
-            // Removed Wednesday Show
             {
                 day: 'FRI',
                 time: '5:00 PM PST',
                 title: 'The Living Room Show',
-                showSocials: [{ url: 'https://www.instagram.com/livingroomshow/', icon: 'instagram' }],
+                showSocials: [],
                 hosts: [
                     { name: 'Hosted by Aaron Kominos-Smith', url: 'https://www.instagram.com/funnyaaron/' }
                 ],
@@ -669,10 +716,10 @@
                 day: 'FRI',
                 time: '7:00 PM PST',
                 title: 'KO Comedy & After Party',
-                showSocials: [{ url: 'https://www.instagram.com/kocomedyclub/', icon: 'instagram' }],
+                showSocials: [],
                 hosts: [
-                    { name: 'Hosted by Kelly Zemnickis', url: 'https://www.instagram.com/thelatvianfoodie' },
-                    { name: '& Desirée Walsh', url: 'https://www.instagram.com/desiree.lisa.walsh_' }
+                    { name: 'Hosted by Kelly Zemnickis', url: 'https://www.instagram.com/thelatvianfoodie/' },
+                    { name: '& Desirée Walsh', url: 'https://www.instagram.com/desiree.lisa.walsh_/' }
                 ],
                 desc: 'Join the party. (After Party is Zoom Only)',
                 zoomLink: 'https://bit.ly/KOcmdy',
@@ -682,8 +729,10 @@
                 day: 'SAT',
                 time: '7:00 AM PST',
                 title: 'New Blerd Order',
-                showSocials: [{ url: 'https://www.instagram.com/newblerdorder/', icon: 'instagram' }],
-                hosts: [],
+                showSocials: [],
+                hosts: [
+                    { name: 'Hosted by New Blerd Order', url: 'https://www.instagram.com/newblerdorder/' }
+                ],
                 desc: 'Early risers get the best bits. Twitch Exclusive.',
                 zoomLink: null,
                 type: 'twitch'
@@ -692,8 +741,10 @@
                 day: 'SAT',
                 time: '3:00 PM PST',
                 title: 'The Jackie Mo Show',
-                showSocials: [{ url: 'https://www.instagram.com/jackiemonahan/', icon: 'instagram' }],
-                hosts: [],
+                showSocials: [],
+                hosts: [
+                    { name: 'Hosted by Jackie Monohan', url: 'https://www.instagram.com/jackiemonahan/' }
+                ],
                 desc: 'Saturday afternoon spotlight.',
                 zoomLink: 'https://bit.ly/JackieMo',
                 type: 'zoom'
@@ -704,7 +755,7 @@
                 title: 'Comedy Coffee (1st Sun/Month)',
                 showSocials: [],
                 hosts: [
-                    { name: 'Hosted by Kelly Zemnickis', url: 'https://www.instagram.com/thelatvianfoodie' }
+                    { name: 'Hosted by Kelly Zemnickis', url: 'https://www.instagram.com/thelatvianfoodie/' }
                 ],
                 desc: 'Wake up and laugh. Monthly special.',
                 zoomLink: 'https://bit.ly/CmdyCoffee',
@@ -714,9 +765,10 @@
                 day: 'SUN',
                 time: '7:00 PM PST',
                 title: 'KO Sunday',
-                showSocials: [{ url: 'https://www.instagram.com/kocomedyclub/', icon: 'instagram' }],
+                showSocials: [],
                 hosts: [
-                    { name: 'Hosted by Casey McNeal', url: 'https://www.instagram.com/caseyscomedy/' }
+                    { name: 'Hosted by Casey McNeal', url: 'https://www.instagram.com/caseyscomedy/' },
+                    { name: '& Katie Farrell', url: 'https://www.instagram.com/katieisaproblem/' }
                 ],
                 desc: 'Closing the weekend with a knockout lineup.',
                 zoomLink: 'https://bit.ly/KOcmdySunday',
