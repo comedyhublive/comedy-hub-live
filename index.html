@@ -469,8 +469,8 @@
                             </h3>
                             <div class="text-xl text-cyber-teal font-medium mb-6 flex items-center gap-2">
                                 w/ Sammy Obeid
-                                <a href="https://www.instagram.com/sammyobeid/" target="_blank" class="text-cyber-teal hover:text-white transition-colors" title="Sammy Obeid on Instagram">
-                                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                                <a href="https://www.instagram.com/sammyobeid/" target="_blank" class="hover:opacity-80 transition-opacity ml-1" title="Sammy Obeid on Instagram">
+                                    <img src="ig button 2.png" alt="Instagram" class="w-6 h-6 rounded-md">
                                 </a>
                             </div>
                             
@@ -987,9 +987,10 @@
                     hostsHtml = show.hosts.map(host => {
                         let linkHtml = '';
                         if (host.url) {
+                            // Update to use the local IG image button instead of the Lucide icon
                             linkHtml = `
-                                <a href="${host.url}" target="_blank" class="text-gray-400 hover:text-white transition-colors ml-1 inline-flex items-center" title="Host Social">
-                                    <i data-lucide="instagram" class="w-4 h-4"></i>
+                                <a href="${host.url}" target="_blank" class="hover:opacity-80 transition-opacity ml-2 inline-flex items-center" title="Host Social">
+                                    <img src="ig button 2.png" alt="Instagram" class="w-5 h-5 rounded-md">
                                 </a>
                             `;
                         }
