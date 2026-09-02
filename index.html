@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comedy Hub | The World's First Digital Comedy Club</title>
     <meta name="description" content="Live stand-up comedy from your couch. The world's first digital comedy venue offering global streams and digital experiences.">
+    <link rel="canonical" href="https://comedyhublive.com/">
+    <meta name="theme-color" content="#050505">
+
+    <!-- Favicons -->
+    <link rel="icon" href="favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="favicon-180.png">
+
+    <!-- Social Share Cards (Open Graph / Twitter) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Comedy Hub">
+    <meta property="og:url" content="https://comedyhublive.com/">
+    <meta property="og:title" content="Comedy Hub | The World's First Digital Comedy Club">
+    <meta property="og:description" content="Live stand-up comedy from your couch. No two-drink minimum. Front row seats from anywhere on earth.">
+    <meta property="og:image" content="https://comedyhublive.com/ComedyHubLogogold.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ComedyHubLive">
+    <meta name="twitter:title" content="Comedy Hub | The World's First Digital Comedy Club">
+    <meta name="twitter:description" content="Live stand-up comedy from your couch. No two-drink minimum. Front row seats from anywhere on earth.">
+    <meta name="twitter:image" content="https://comedyhublive.com/ComedyHubLogogold.jpg">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -76,6 +95,20 @@
         body {
             background-color: #050505;
             color: #ffffff;
+        }
+
+        /* Keep anchor targets clear of the fixed 80px navbar */
+        html { scroll-padding-top: 6rem; }
+
+        /* Respect users who ask for less motion */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .reveal-on-scroll { opacity: 1; transform: none; }
         }
 
         /* Helper for hiding broken images and showing text fallback */
@@ -151,6 +184,19 @@
             background: rgba(5, 5, 5, 0.8);
             backdrop-filter: blur(8px);
         }
+
+        /* Fundraiser spotlight: slow breathing gold halo */
+        @keyframes fundraiser-glow {
+            0%, 100% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.15), 0 0 60px rgba(255, 0, 255, 0.05); }
+            50%      { box-shadow: 0 0 45px rgba(255, 215, 0, 0.30), 0 0 90px rgba(255, 0, 255, 0.12); }
+        }
+        .fundraiser-halo { animation: fundraiser-glow 4s ease-in-out infinite; }
+
+        /* Animated gradient for the hero headline */
+        @keyframes gradient {
+            0%   { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
     </style>
 
     <!-- Global Scripts including Error Handlers -->
@@ -217,7 +263,7 @@
             </div>
 
             <p class="mt-4 text-center text-xs text-gray-500 border-t border-white/5 pt-4">
-                Or join via <a href="https://KOComedy.com" target="_blank" class="text-cyber-teal hover:underline">KOComedy.com Email List</a>
+                Or join via <a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" class="text-cyber-teal hover:underline">KOComedy.com Email List</a>
             </p>
         </div>
     </div>
@@ -291,6 +337,9 @@
                         <a href="#twitch-live" class="text-cyber-purple hover:text-white transition-colors text-sm font-bold flex items-center gap-2 border border-cyber-purple/30 bg-cyber-purple/10 px-3 py-1.5 rounded-full hover:bg-cyber-purple hover:border-cyber-purple">
                             <i data-lucide="twitch" class="w-4 h-4"></i> LIVE
                         </a>
+                        <a href="#fundraiser" class="text-cyber-gold hover:text-black transition-colors text-sm font-bold flex items-center gap-1.5 border border-cyber-gold/40 bg-cyber-gold/10 px-3 py-1.5 rounded-full hover:bg-cyber-gold hover:border-cyber-gold">
+                            <i data-lucide="heart-handshake" class="w-4 h-4"></i> FUNDRAISER
+                        </a>
                         <a href="#schedule" class="hover:text-cyber-teal transition-colors text-sm font-medium">The Schedule</a>
                         <a href="#experiences" class="hover:text-cyber-pink transition-colors text-sm font-medium">Experiences</a>
                         <a href="#about" class="hover:text-cyber-purple transition-colors text-sm font-medium">About</a>
@@ -305,7 +354,7 @@
 
                 <!-- Mobile Menu Button -->
                 <div class="-mr-2 flex md:hidden">
-                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                    <button type="button" onclick="toggleMobileMenu()" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
                 </div>
@@ -316,6 +365,7 @@
         <div class="md:hidden hidden bg-cyber-charcoal border-b border-cyber-purple/20" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#twitch-live" onclick="toggleMobileMenu()" class="text-cyber-purple hover:text-white block px-3 py-4 rounded-md text-base font-bold flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> WATCH LIVE</a>
+                <a href="#fundraiser" onclick="toggleMobileMenu()" class="text-cyber-gold hover:text-white px-3 py-4 rounded-md text-base font-bold flex items-center gap-2"><i data-lucide="heart-handshake" class="w-4 h-4"></i> JERRY ROCHA FUNDRAISER</a>
                 <a href="#schedule" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-teal block px-3 py-4 rounded-md text-base font-medium">The Schedule</a>
                 <a href="#experiences" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-pink block px-3 py-4 rounded-md text-base font-medium">Experiences</a>
                 <a href="#about" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-purple block px-3 py-4 rounded-md text-base font-medium">About</a>
@@ -364,22 +414,18 @@
         </div>
     </header>
 
-    <!-- Ticker / Social Proof -->
-    <div class="bg-cyber-purple/10 border-y border-cyber-purple/20 overflow-hidden py-3 backdrop-blur-sm">
-        <div class="whitespace-nowrap flex animate-[marquee_20s_linear_infinite]">
-            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">LIVE ON TWITCH</span>
-            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
-            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">STREAMING GLOBALLY</span>
-            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
-            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">PROFESSIONAL AUDIO</span>
-            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
-            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">LIVE MODERATION</span>
-            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
-            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">NO HECKLERS</span>
-             <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
-            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">LIVE ON TWITCH</span>
-            <span class="mx-8 text-white/20 font-display font-bold text-lg">•</span>
-            <span class="mx-8 text-cyber-purple/60 font-display font-bold text-lg">STREAMING GLOBALLY</span>
+    <!-- Ticker / Social Proof (static) -->
+    <div class="bg-cyber-purple/10 border-y border-cyber-purple/20 py-3 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-center">
+            <span class="text-cyber-purple/60 font-display font-bold text-lg">LIVE ON TWITCH</span>
+            <span class="text-white/20 font-display font-bold text-lg">&bull;</span>
+            <span class="text-cyber-purple/60 font-display font-bold text-lg">STREAMING GLOBALLY</span>
+            <span class="text-white/20 font-display font-bold text-lg">&bull;</span>
+            <span class="text-cyber-purple/60 font-display font-bold text-lg">PROFESSIONAL AUDIO</span>
+            <span class="text-white/20 font-display font-bold text-lg">&bull;</span>
+            <span class="text-cyber-purple/60 font-display font-bold text-lg">LIVE MODERATION</span>
+            <span class="text-white/20 font-display font-bold text-lg">&bull;</span>
+            <span class="text-cyber-purple/60 font-display font-bold text-lg">NO HECKLERS</span>
         </div>
     </div>
 
@@ -445,12 +491,88 @@
                 </div>
             </div>
 
+            <!-- ============================================================
+                 FUNDRAISER SPOTLIGHT  -  Jerry Rocha / City of Hope
+                 Event: Wed Sep 2, 2026, 9:00 PM ET / 6:00 PM PT
+                 This whole block is self-contained. After the show, delete
+                 everything between this comment and "END FUNDRAISER SPOTLIGHT".
+                 ============================================================ -->
+            <div id="fundraiser" class="mb-12 rounded-lg overflow-hidden border border-cyber-gold/50 bg-gradient-to-br from-cyber-gold/10 via-cyber-charcoal to-cyber-pink/10 fundraiser-halo reveal-on-scroll">
+                <div class="flex flex-col lg:flex-row">
+
+                    <!-- Flyer -->
+                    <div class="w-full lg:w-2/5 bg-black border-b lg:border-b-0 lg:border-r border-cyber-gold/30 flex items-center justify-center p-3">
+                        <a href="https://us02web.zoom.us/j/88225204877?pwd=lAHD8tyb9qTtbPm8bUyj7ONNbEpbby.1" target="_blank" rel="noopener noreferrer" class="block group">
+                            <img src="jerry-rocha-fundraiser.jpg"
+                                 alt="Don't make a f*ck outta me - an online fundraiser for City of Hope and a celebration of Jerry Rocha, Wednesday September 2nd, 9pm ET / 6pm PT, hosted by Kelly Zemnickis"
+                                 width="1000" height="1294" loading="lazy" decoding="async"
+                                 class="w-full h-auto lg:h-full lg:max-h-[640px] object-contain group-hover:opacity-90 transition-opacity">
+                        </a>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="w-full lg:w-3/5 p-8 flex flex-col justify-center relative">
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-cyber-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                        <div class="relative z-10">
+                            <div class="flex flex-wrap items-center gap-2 mb-4">
+                                <span id="fundraiser-badge" class="inline-flex items-center gap-2 px-3 py-1 bg-cyber-gold text-black text-[12.5px] font-bold uppercase tracking-wider rounded">
+                                    <i data-lucide="heart-handshake" class="w-4 h-4"></i> Charity Fundraiser
+                                </span>
+                                <span class="inline-block px-3 py-1 bg-cyber-pink/20 border border-cyber-pink/50 text-cyber-pink text-[12.5px] font-bold uppercase tracking-wider rounded">
+                                    One Night Only
+                                </span>
+                            </div>
+
+                            <h3 class="text-3xl md:text-5xl font-display font-black text-white mb-3 uppercase leading-none drop-shadow-[0_0_12px_rgba(255,215,0,0.35)]">
+                                Don&rsquo;t Make A<br>F*ck Outta Me
+                            </h3>
+
+                            <p class="text-lg text-cyber-gold font-medium mb-6">
+                                An online fundraiser for <span class="text-white font-bold">City of Hope</span> &amp; a celebration of <span class="text-white font-bold">Jerry Rocha</span>
+                            </p>
+
+                            <div class="flex flex-col gap-3 mb-6">
+                                <div class="flex items-start gap-2 text-white font-bold">
+                                    <i data-lucide="calendar" class="w-5 h-5 text-cyber-gold flex-shrink-0 mt-0.5"></i>
+                                    <span>Wednesday, September 2 &middot; 9:00 PM ET / 6:00 PM PT</span>
+                                </div>
+                                <div id="fundraiser-countdown" class="flex items-center gap-2 text-cyber-teal text-sm font-bold" role="status"></div>
+                                <div class="flex items-start gap-2 text-gray-300 text-sm">
+                                    <i data-lucide="users" class="w-5 h-5 text-cyber-gold flex-shrink-0 mt-0.5"></i>
+                                    <span>
+                                        Hosted by <span class="text-white font-bold">Kelly Zemnickis</span>, with
+                                        Cari Haim &middot; Eddie Pence &middot; John Liu &middot; Rebecca Macdonald &middot; Matthew Hughes &middot; Erik Escobar &middot; Mary Kennedy
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <a href="https://us02web.zoom.us/j/88225204877?pwd=lAHD8tyb9qTtbPm8bUyj7ONNbEpbby.1" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-gold hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(255,215,0,0.35)]">
+                                    <i data-lucide="video" class="w-5 h-5"></i> JOIN THE ZOOM
+                                </a>
+                                <!-- Swap this href for the official City of Hope donation page when you have it -->
+                                <a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-transparent border border-cyber-gold/60 hover:bg-cyber-gold/10 hover:border-cyber-gold text-cyber-gold font-bold rounded flex items-center justify-center gap-2 transition-colors">
+                                    <i data-lucide="heart" class="w-5 h-5"></i> DONATE &amp; INFO
+                                </a>
+                            </div>
+
+                            <p class="text-gray-500 text-xs mt-4">
+                                Meeting ID: 882 2520 4877 &middot; Open to everyone &mdash; no sign-in required.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ================= END FUNDRAISER SPOTLIGHT ================= -->
+
             <!-- Highlighted Special Event -->
             <div class="mb-12 bg-gradient-to-r from-cyber-purple/10 to-cyber-teal/10 border border-cyber-teal/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.15)] reveal-on-scroll">
                 <div class="flex flex-col md:flex-row">
                     <!-- Flyer Image -->
                     <div class="w-full md:w-2/5 border-b md:border-b-0 md:border-r border-white/10">
-                        <img src="Sammy Hour Generic.png" alt="Sammy Does an Hour w/ Sammy Obeid Flyer" class="w-full h-full object-cover">
+                        <img src="Sammy Hour Generic.png" alt="Sammy Does an Hour w/ Sammy Obeid Flyer" width="1080" height="1080" loading="lazy" decoding="async" class="w-full h-full object-cover">
                     </div>
                     
                     <!-- Event Details -->
@@ -469,15 +591,15 @@
                             </h3>
                             <div class="text-xl text-cyber-teal font-medium mb-6 flex items-center gap-2">
                                 w/ Sammy Obeid
-                                <a href="https://www.instagram.com/sammyobeid/" target="_blank" class="hover:opacity-80 transition-opacity ml-1" title="Sammy Obeid on Instagram">
-                                    <img src="ig button 2.png" alt="Instagram" class="w-6 h-6 rounded-md">
+                                <a href="https://www.instagram.com/sammyobeid/" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity ml-1" title="Sammy Obeid on Instagram">
+                                    <img src="ig-icon.png" alt="" width="24" height="24" loading="lazy" class="w-6 h-6 rounded-md">
                                 </a>
                             </div>
                             
                             <div class="flex flex-col gap-2 mb-6">
                                 <div class="flex items-center gap-2 text-white font-bold">
                                     <i data-lucide="calendar" class="w-5 h-5 text-cyber-gold"></i>
-                                    June's Show Date Announced Soon
+                                    September's Show Date Will Be Announced Soon
                                 </div>
                                 <p class="text-gray-400 text-sm max-w-lg">
                                     Sammy tries out all of his new material before taking it on the road. Catch the fresh bits first on Twitch or join the interactive Zoom audience!
@@ -486,10 +608,10 @@
                             
                             <!-- Action Buttons -->
                             <div class="flex flex-col sm:flex-row gap-4 mt-4">
-                                <a href="https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09&mc_cid=825ffdba58&mc_eid=1c3738da46#success" target="_blank" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                                <a href="https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09&mc_cid=825ffdba58&mc_eid=1c3738da46#success" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
                                     <i data-lucide="video" class="w-5 h-5"></i> JOIN ZOOM AUDIENCE
                                 </a>
-                                <a href="https://www.twitch.tv/comedyhub" target="_blank" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(145,70,255,0.3)]">
+                                <a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(145,70,255,0.3)]">
                                     <i data-lucide="twitch" class="w-5 h-5"></i> WATCH ON TWITCH
                                 </a>
                             </div>
@@ -506,7 +628,7 @@
             
             <div class="mt-12 text-center p-6 bg-cyber-charcoal border border-white/5 rounded-lg max-w-2xl mx-auto reveal-on-scroll">
                  <p class="text-gray-400 mb-4">Want the Zoom links emailed directly to you?</p>
-                 <a href="https://KOComedy.com" target="_blank" class="inline-flex items-center gap-2 text-cyber-teal hover:text-white font-bold transition-colors border-b border-cyber-teal hover:border-white pb-1">
+                 <a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-cyber-teal hover:text-white font-bold transition-colors border-b border-cyber-teal hover:border-white pb-1">
                     Join the KOComedy.com Email List <i data-lucide="external-link" class="w-4 h-4"></i>
                  </a>
             </div>
@@ -594,20 +716,18 @@
                 <div>
                     <h4 class="text-white font-bold mb-6">Connect</h4>
                     <div class="flex gap-4">
-                        <a href="https://x.com/ComedyHubLive" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-cyber-purple hover:text-white transition-all">
+                        <a href="https://x.com/ComedyHubLive" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on X" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-cyber-purple hover:text-white transition-all">
                             <i data-lucide="twitter" class="w-5 h-5"></i>
                         </a>
-                        <a href="https://www.instagram.com/comedyhublive/" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-pink-600 hover:text-white transition-all">
+                        <a href="https://www.instagram.com/comedyhublive/" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on Instagram" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-pink-600 hover:text-white transition-all">
                             <i data-lucide="instagram" class="w-5 h-5"></i>
                         </a>
-                        <a href="https://www.facebook.com/ComedyHubLive/" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all">
+                        <a href="https://www.facebook.com/ComedyHubLive/" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on Facebook" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all">
                             <i data-lucide="facebook" class="w-5 h-5"></i>
                         </a>
                         <!-- BlueSky Button with Correct Logo SVG -->
-                        <a href="https://bsky.app/profile/comedyhublive.bsky.social" target="_blank" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-400 hover:text-white transition-all" title="BlueSky">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current">
-                                <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565-.131 2.032-.241 4.357.646 6.821c1.279 3.552 3.45 5.404 6.337 6.408C3.213 14.976-.174 16.591.006 20.353c.09 1.887 1.411 2.981 3.23 2.981 2.955 0 6.6-4.8 8.764-8.744 2.164 3.944 5.809 8.744 8.764 8.744 1.819 0 3.14-1.094 3.23-2.981.18-3.762-3.207-5.377-6.977-7.124 2.887-1.004 5.058-2.856 6.337-6.408.887-2.464.777-4.789-.256-5.256-.659-.299-1.664-.621-4.3 1.24C20.046 4.747 17.087 8.686 16 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C6.566.944 5.561 1.266 4.902 1.565 3.869 2.032 3.759 4.357 4.646 6.821c1.279 3.552 3.45 5.404 6.337 6.408C7.213 14.976 3.826 16.591 4.006 20.353c.09 1.887 1.411 2.981 3.23 2.981 2.955 0 6.6-4.8 8.764-8.744 2.164 3.944 5.809 8.744 8.764 8.744 1.819 0 3.14-1.094 3.23-2.981.18-3.762-3.207-5.377-6.977-7.124 2.887-1.004 5.058-2.856 6.337-6.408.887-2.464.777-4.789-.256-5.256-.659-.299-1.664-.621-4.3 1.24C16.046 4.747 13.087 8.686 12 10.8z"/>
-                            </svg>
+                        <a href="https://bsky.app/profile/comedyhublive.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on BlueSky" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-400 hover:text-white transition-all" title="BlueSky">
+                            <svg viewBox="0 0 600 530" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433113.05 19.244 141.64 82.980 79.532 146.72-117.99 121.06-169.6-30.379-182.82-69.187-2.426-7.117-3.56-10.448-3.575-7.616-.007-2.832-1.141.499-3.567 7.616-13.215 38.808-64.825 190.25-182.82 69.187-62.108-63.742-33.523-127.48 79.534-146.72-67.115 11.421-142.55-7.449-163.25-81.433C10.155 217.61 0 86.535 0 68.825c0-88.687 77.742-60.816 125.72-24.795z" transform="translate(5)"/></svg>
                         </a>
                     </div>
                     <p class="text-gray-600 mt-4 text-sm">@ComedyHubLive</p>
@@ -618,7 +738,7 @@
             </div>
             
             <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-600 text-sm">© 2024 Comedy Hub. All rights reserved.</p>
+                <p class="text-gray-600 text-sm">© <span id="copyright-year">2026</span> Comedy Hub. All rights reserved.</p>
                 <div class="flex gap-6 text-sm text-gray-600">
                     <a href="#" class="hover:text-white">Privacy</a>
                     <a href="#" class="hover:text-white">Terms</a>
@@ -810,7 +930,15 @@
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
             menu.classList.toggle('hidden');
+            const isOpen = !menu.classList.contains('hidden');
+            if (btn) {
+                btn.setAttribute('aria-expanded', String(isOpen));
+                btn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+                btn.innerHTML = `<i data-lucide="${isOpen ? 'x' : 'menu'}" class="w-8 h-8"></i>`;
+                if (window.lucide) lucide.createIcons();
+            }
         }
 
         function updateUIForLogin(user) {
@@ -954,13 +1082,13 @@
                 let actionBtn = '';
                 if (show.type === 'twitch') {
                     actionBtn = `
-                        <a href="https://twitch.tv/comedyhub" target="_blank" class="w-full md:w-auto px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white rounded font-medium flex items-center justify-center gap-2 transition-colors">
+                        <a href="https://twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white rounded font-medium flex items-center justify-center gap-2 transition-colors">
                             <i data-lucide="twitch" class="w-4 h-4"></i> Watch on Twitch
                         </a>`;
                 } else {
                     if (currentUser) {
                          actionBtn = `
-                            <a href="${show.zoomLink}" target="_blank" class="w-full md:w-auto px-6 py-3 bg-cyber-teal hover:bg-white text-black hover:text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                            <a href="${show.zoomLink}" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-teal hover:bg-white text-black hover:text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
                                 <i data-lucide="video" class="w-4 h-4"></i> JOIN ZOOM AUDIENCE
                             </a>`;
                     } else {
@@ -975,7 +1103,7 @@
                 let showSocialsHtml = '';
                 if (show.showSocials && show.showSocials.length > 0) {
                     showSocialsHtml = show.showSocials.map(social => `
-                        <a href="${social.url}" target="_blank" class="text-gray-400 hover:text-white transition-colors ml-2 inline-flex items-center" title="Show Social">
+                        <a href="${social.url}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors ml-2 inline-flex items-center" title="Show Social">
                             <i data-lucide="${social.icon}" class="w-4 h-4"></i>
                         </a>
                     `).join('');
@@ -989,8 +1117,8 @@
                         if (host.url) {
                             // Update to use the local IG image button instead of the Lucide icon
                             linkHtml = `
-                                <a href="${host.url}" target="_blank" class="hover:opacity-80 transition-opacity ml-2 inline-flex items-center" title="Host Social">
-                                    <img src="ig button 2.png" alt="Instagram" class="w-5 h-5 rounded-md">
+                                <a href="${host.url}" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity ml-2 inline-flex items-center" title="Host Social">
+                                    <img src="ig-icon.png" alt="" width="20" height="20" loading="lazy" class="w-5 h-5 rounded-md">
                                 </a>
                             `;
                         }
@@ -1045,6 +1173,57 @@
             } else {
                 document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('is-visible'));
             }
+        }
+
+        // ============================================================
+        // FUNDRAISER COUNTDOWN  -  delete along with the #fundraiser
+        // block in the HTML once the event is over.
+        // Sep 2 2026, 9:00 PM Eastern (EDT = UTC-4) -> 01:00 UTC on Sep 3.
+        // ============================================================
+        const FUNDRAISER_START = new Date('2026-09-03T01:00:00Z');
+        const FUNDRAISER_END   = new Date('2026-09-03T04:00:00Z'); // assume a ~3 hour show
+
+        function updateFundraiserCountdown() {
+            const el = document.getElementById('fundraiser-countdown');
+            const badge = document.getElementById('fundraiser-badge');
+            if (!el) return;
+
+            const now = new Date();
+
+            if (now >= FUNDRAISER_END) {
+                el.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i> This event has ended &mdash; thank you for supporting City of Hope.';
+                el.className = 'flex items-center gap-2 text-gray-400 text-sm font-bold';
+                if (badge) {
+                    badge.innerHTML = '<i data-lucide="heart-handshake" class="w-4 h-4"></i> Thank You';
+                    badge.className = 'inline-flex items-center gap-2 px-3 py-1 bg-white/10 text-gray-300 text-[12.5px] font-bold uppercase tracking-wider rounded';
+                }
+                if (window.lucide) lucide.createIcons();
+                return true; // done, stop ticking
+            }
+
+            if (now >= FUNDRAISER_START) {
+                el.innerHTML = '<i data-lucide="radio" class="w-4 h-4"></i> Happening right now &mdash; jump in!';
+                el.className = 'flex items-center gap-2 text-cyber-pink text-sm font-bold animate-pulse';
+                if (badge) {
+                    badge.innerHTML = '<i data-lucide="radio" class="w-4 h-4"></i> Live Now';
+                    badge.className = 'inline-flex items-center gap-2 px-3 py-1 bg-cyber-pink text-white text-[12.5px] font-bold uppercase tracking-wider rounded animate-pulse';
+                }
+                if (window.lucide) lucide.createIcons();
+                return false;
+            }
+
+            let secs = Math.floor((FUNDRAISER_START - now) / 1000);
+            const d = Math.floor(secs / 86400); secs -= d * 86400;
+            const h = Math.floor(secs / 3600);  secs -= h * 3600;
+            const m = Math.floor(secs / 60);
+            const parts = [];
+            if (d) parts.push(d + (d === 1 ? ' day' : ' days'));
+            if (d || h) parts.push(h + (h === 1 ? ' hour' : ' hours'));
+            parts.push(m + (m === 1 ? ' minute' : ' minutes'));
+            el.innerHTML = '<i data-lucide="timer" class="w-4 h-4"></i> Starts in ' + parts.join(', ');
+            el.className = 'flex items-center gap-2 text-cyber-teal text-sm font-bold';
+            if (window.lucide) lucide.createIcons();
+            return false;
         }
 
         // Twitch Player Logic
@@ -1114,6 +1293,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) lucide.createIcons();
             
+            // Footer copyright year
+            const yearEl = document.getElementById('copyright-year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+            // Fundraiser countdown (ticks every 30s until the show is over)
+            if (!updateFundraiserCountdown()) {
+                const fundraiserTimer = setInterval(() => {
+                    if (updateFundraiserCountdown()) clearInterval(fundraiserTimer);
+                }, 30000);
+            }
+
             // Timezone
             const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const tzDisplay = document.getElementById('user-timezone');
