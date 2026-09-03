@@ -37,7 +37,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     
     <!-- Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Pinned on purpose: "@latest" silently jumped to v1.x, which deleted every brand icon.
+         Brand marks below are inlined so they can never break again. -->
+    <script src="https://unpkg.com/lucide@1.39.0"></script>
 
     <!-- Custom Config & Styles -->
     <script>
@@ -185,13 +187,6 @@
             backdrop-filter: blur(8px);
         }
 
-        /* Fundraiser spotlight: slow breathing gold halo */
-        @keyframes fundraiser-glow {
-            0%, 100% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.15), 0 0 60px rgba(255, 0, 255, 0.05); }
-            50%      { box-shadow: 0 0 45px rgba(255, 215, 0, 0.30), 0 0 90px rgba(255, 0, 255, 0.12); }
-        }
-        .fundraiser-halo { animation: fundraiser-glow 4s ease-in-out infinite; }
-
         /* Animated gradient for the hero headline */
         @keyframes gradient {
             0%   { background-position: 0% center; }
@@ -334,11 +329,8 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center gap-8">
                     <div class="flex items-baseline space-x-6">
-                        <a href="#twitch-live" class="text-cyber-purple hover:text-white transition-colors text-sm font-bold flex items-center gap-2 border border-cyber-purple/30 bg-cyber-purple/10 px-3 py-1.5 rounded-full hover:bg-cyber-purple hover:border-cyber-purple">
-                            <i data-lucide="twitch" class="w-4 h-4"></i> LIVE
-                        </a>
-                        <a href="#fundraiser" class="text-cyber-gold hover:text-black transition-colors text-sm font-bold flex items-center gap-1.5 border border-cyber-gold/40 bg-cyber-gold/10 px-3 py-1.5 rounded-full hover:bg-cyber-gold hover:border-cyber-gold">
-                            <i data-lucide="heart-handshake" class="w-4 h-4"></i> FUNDRAISER
+                        <a href="#twitch-live" class="nav-live-pill text-cyber-purple hover:text-white transition-colors text-sm font-bold flex items-center gap-2 border border-cyber-purple/30 bg-cyber-purple/10 px-3 py-1.5 rounded-full hover:bg-cyber-purple hover:border-cyber-purple">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> LIVE
                         </a>
                         <a href="#schedule" class="hover:text-cyber-teal transition-colors text-sm font-medium">The Schedule</a>
                         <a href="#experiences" class="hover:text-cyber-pink transition-colors text-sm font-medium">Experiences</a>
@@ -364,8 +356,7 @@
         <!-- Mobile Menu -->
         <div class="md:hidden hidden bg-cyber-charcoal border-b border-cyber-purple/20" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#twitch-live" onclick="toggleMobileMenu()" class="text-cyber-purple hover:text-white block px-3 py-4 rounded-md text-base font-bold flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> WATCH LIVE</a>
-                <a href="#fundraiser" onclick="toggleMobileMenu()" class="text-cyber-gold hover:text-white px-3 py-4 rounded-md text-base font-bold flex items-center gap-2"><i data-lucide="heart-handshake" class="w-4 h-4"></i> JERRY ROCHA FUNDRAISER</a>
+                <a href="#twitch-live" onclick="toggleMobileMenu()" class="text-cyber-purple hover:text-white block px-3 py-4 rounded-md text-base font-bold flex items-center gap-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> WATCH LIVE</a>
                 <a href="#schedule" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-teal block px-3 py-4 rounded-md text-base font-medium">The Schedule</a>
                 <a href="#experiences" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-pink block px-3 py-4 rounded-md text-base font-medium">Experiences</a>
                 <a href="#about" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-cyber-purple block px-3 py-4 rounded-md text-base font-medium">About</a>
@@ -404,7 +395,7 @@
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="#twitch-live" class="glitch-btn w-full sm:w-auto px-8 py-4 bg-cyber-purple hover:bg-purple-700 text-white font-bold rounded-none skew-x-[-10deg] border border-cyber-purple shadow-[0_0_15px_rgba(145,70,255,0.4)] transition-all transform hover:scale-105">
                     <div class="skew-x-[10deg] flex items-center justify-center gap-2">
-                        <i data-lucide="twitch"></i> WATCH LIVE
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="w-6 h-6 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> WATCH LIVE
                     </div>
                 </a>
                 <button id="hero-join-btn" class="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/30 hover:border-cyber-teal hover:text-cyber-teal hover:bg-cyber-teal/10 text-white font-bold rounded-none skew-x-[-10deg] transition-all transform hover:scale-105">
@@ -491,81 +482,8 @@
                 </div>
             </div>
 
-            <!-- ============================================================
-                 FUNDRAISER SPOTLIGHT  -  Jerry Rocha / City of Hope
-                 Event: Wed Sep 2, 2026, 9:00 PM ET / 6:00 PM PT
-                 This whole block is self-contained. After the show, delete
-                 everything between this comment and "END FUNDRAISER SPOTLIGHT".
-                 ============================================================ -->
-            <div id="fundraiser" class="mb-12 rounded-lg overflow-hidden border border-cyber-gold/50 bg-gradient-to-br from-cyber-gold/10 via-cyber-charcoal to-cyber-pink/10 fundraiser-halo reveal-on-scroll">
-                <div class="flex flex-col lg:flex-row">
-
-                    <!-- Flyer -->
-                    <div class="w-full lg:w-2/5 bg-black border-b lg:border-b-0 lg:border-r border-cyber-gold/30 flex items-center justify-center p-3">
-                        <a href="https://us02web.zoom.us/j/88225204877?pwd=lAHD8tyb9qTtbPm8bUyj7ONNbEpbby.1" target="_blank" rel="noopener noreferrer" class="block group">
-                            <img src="jerry-rocha-fundraiser.jpg"
-                                 alt="Don't make a f*ck outta me - an online fundraiser for City of Hope and a celebration of Jerry Rocha, Wednesday September 2nd, 9pm ET / 6pm PT, hosted by Kelly Zemnickis"
-                                 width="1000" height="1294" loading="lazy" decoding="async"
-                                 class="w-full h-auto lg:h-full lg:max-h-[640px] object-contain group-hover:opacity-90 transition-opacity">
-                        </a>
-                    </div>
-
-                    <!-- Details -->
-                    <div class="w-full lg:w-3/5 p-8 flex flex-col justify-center relative">
-                        <div class="absolute top-0 right-0 w-40 h-40 bg-cyber-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-
-                        <div class="relative z-10">
-                            <div class="flex flex-wrap items-center gap-2 mb-4">
-                                <span id="fundraiser-badge" class="inline-flex items-center gap-2 px-3 py-1 bg-cyber-gold text-black text-[12.5px] font-bold uppercase tracking-wider rounded">
-                                    <i data-lucide="heart-handshake" class="w-4 h-4"></i> Charity Fundraiser
-                                </span>
-                                <span class="inline-block px-3 py-1 bg-cyber-pink/20 border border-cyber-pink/50 text-cyber-pink text-[12.5px] font-bold uppercase tracking-wider rounded">
-                                    One Night Only
-                                </span>
-                            </div>
-
-                            <h3 class="text-3xl md:text-5xl font-display font-black text-white mb-3 uppercase leading-none drop-shadow-[0_0_12px_rgba(255,215,0,0.35)]">
-                                Don&rsquo;t Make A<br>F*ck Outta Me
-                            </h3>
-
-                            <p class="text-lg text-cyber-gold font-medium mb-6">
-                                An online fundraiser for <span class="text-white font-bold">City of Hope</span> &amp; a celebration of <span class="text-white font-bold">Jerry Rocha</span>
-                            </p>
-
-                            <div class="flex flex-col gap-3 mb-6">
-                                <div class="flex items-start gap-2 text-white font-bold">
-                                    <i data-lucide="calendar" class="w-5 h-5 text-cyber-gold flex-shrink-0 mt-0.5"></i>
-                                    <span>Wednesday, September 2 &middot; 9:00 PM ET / 6:00 PM PT</span>
-                                </div>
-                                <div id="fundraiser-countdown" class="flex items-center gap-2 text-cyber-teal text-sm font-bold" role="status"></div>
-                                <div class="flex items-start gap-2 text-gray-300 text-sm">
-                                    <i data-lucide="users" class="w-5 h-5 text-cyber-gold flex-shrink-0 mt-0.5"></i>
-                                    <span>
-                                        Hosted by <span class="text-white font-bold">Kelly Zemnickis</span>, with
-                                        Cari Haim &middot; Eddie Pence &middot; John Liu &middot; Rebecca Macdonald &middot; Matthew Hughes &middot; Erik Escobar &middot; Mary Kennedy
-                                    </span>
-                                </div>
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="flex flex-col sm:flex-row gap-4">
-                                <a href="https://us02web.zoom.us/j/88225204877?pwd=lAHD8tyb9qTtbPm8bUyj7ONNbEpbby.1" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-gold hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(255,215,0,0.35)]">
-                                    <i data-lucide="video" class="w-5 h-5"></i> JOIN THE ZOOM
-                                </a>
-                                <!-- Swap this href for the official City of Hope donation page when you have it -->
-                                <a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-transparent border border-cyber-gold/60 hover:bg-cyber-gold/10 hover:border-cyber-gold text-cyber-gold font-bold rounded flex items-center justify-center gap-2 transition-colors">
-                                    <i data-lucide="heart" class="w-5 h-5"></i> DONATE &amp; INFO
-                                </a>
-                            </div>
-
-                            <p class="text-gray-500 text-xs mt-4">
-                                Meeting ID: 882 2520 4877 &middot; Open to everyone &mdash; no sign-in required.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ================= END FUNDRAISER SPOTLIGHT ================= -->
+            <!-- Up Next banner - filled in by renderUpNext() -->
+            <div id="up-next" class="mb-12 hidden reveal-on-scroll"></div>
 
             <!-- Highlighted Special Event -->
             <div class="mb-12 bg-gradient-to-r from-cyber-purple/10 to-cyber-teal/10 border border-cyber-teal/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.15)] reveal-on-scroll">
@@ -612,7 +530,7 @@
                                     <i data-lucide="video" class="w-5 h-5"></i> JOIN ZOOM AUDIENCE
                                 </a>
                                 <a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(145,70,255,0.3)]">
-                                    <i data-lucide="twitch" class="w-5 h-5"></i> WATCH ON TWITCH
+                                    <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> WATCH ON TWITCH
                                 </a>
                             </div>
                         </div>
@@ -717,13 +635,13 @@
                     <h4 class="text-white font-bold mb-6">Connect</h4>
                     <div class="flex gap-4">
                         <a href="https://x.com/ComedyHubLive" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on X" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-cyber-purple hover:text-white transition-all">
-                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                         </a>
                         <a href="https://www.instagram.com/comedyhublive/" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on Instagram" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-pink-600 hover:text-white transition-all">
-                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.39C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.39 2.12.66.67 1.33 1.09 2.12 1.39.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.39.67-.66 1.09-1.33 1.39-2.12.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.39-2.12C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32A6.16 6.16 0 0 0 12 5.84zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
                         </a>
                         <a href="https://www.facebook.com/ComedyHubLive/" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on Facebook" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all">
-                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
                         </a>
                         <!-- BlueSky Button with Correct Logo SVG -->
                         <a href="https://bsky.app/profile/comedyhublive.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Comedy Hub on BlueSky" class="w-10 h-10 rounded bg-white/5 flex items-center justify-center text-gray-400 hover:bg-blue-400 hover:text-white transition-all" title="BlueSky">
@@ -795,12 +713,23 @@
         let currentUser = null;
         let isSignUpMode = false;
 
+        // ----------------------------------------------------------------
+        // SCHEDULE DATA
+        // Times are the venue's WALL-CLOCK Pacific time and never change with
+        // daylight saving, so we store hour/minute plus the Pacific timezone
+        // and derive every label from that. Edit hour/minute here only --
+        // the "5:00 PM PT" strings on the page are generated, not typed.
+        //   dayIndex: 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
+        //   freq:     'weekly' | 'monthlyFirst' (first <dayIndex> of the month)
+        // ----------------------------------------------------------------
+        const VENUE_TZ = 'America/Los_Angeles';
+
         const scheduleData = [
             {
-                day: 'MON',
-                time: '5:00 PM PST',
+                day: 'MON', dayIndex: 1, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
+                image: 'show-chirping-bird.jpg',
                 title: 'Chirping Bird Comedy',
-                showSocials: [], 
+                showSocials: [],
                 hosts: [
                     { name: 'Hosted By Mark Anthony', url: 'https://www.instagram.com/markanthonycomedy/' }
                 ],
@@ -809,8 +738,8 @@
                 type: 'zoom'
             },
             {
-                day: 'TUE',
-                time: '6:00 PM PST',
+                day: 'TUE', dayIndex: 2, hour: 18, minute: 0, durationMins: 90, freq: 'weekly',
+                image: 'show-kapfer.png',
                 title: 'Anthony Kapfer Digital Something',
                 showSocials: [],
                 hosts: [
@@ -821,8 +750,20 @@
                 type: 'zoom'
             },
             {
-                day: 'FRI',
-                time: '5:00 PM PST',
+                day: 'THU', dayIndex: 4, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
+                image: 'show-jackie-mo.jpg',
+                title: 'The Jackie Mo Show',
+                showSocials: [],
+                hosts: [
+                    { name: 'Hosted by Jackie Monohan', url: 'https://www.instagram.com/jackiemonahan/' }
+                ],
+                desc: 'Comedy. Chaos. Out of this world.',
+                zoomLink: 'https://bit.ly/JackieMo',
+                type: 'zoom'
+            },
+            {
+                day: 'FRI', dayIndex: 5, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
+                image: 'show-living-room.png',
                 title: 'The Living Room Show',
                 showSocials: [],
                 hosts: [
@@ -833,8 +774,8 @@
                 type: 'zoom'
             },
             {
-                day: 'FRI',
-                time: '7:00 PM PST',
+                day: 'FRI', dayIndex: 5, hour: 19, minute: 0, durationMins: 120, freq: 'weekly',
+                image: 'show-ko-comedy.png',
                 title: 'KO Comedy & After Party',
                 showSocials: [],
                 hosts: [
@@ -846,8 +787,8 @@
                 type: 'zoom'
             },
             {
-                day: 'SAT',
-                time: '7:00 AM PST',
+                day: 'SAT', dayIndex: 6, hour: 7, minute: 0, durationMins: 90, freq: 'weekly',
+                image: 'show-new-blerd.png',
                 title: 'New Blerd Order',
                 showSocials: [],
                 hosts: [
@@ -858,20 +799,8 @@
                 type: 'twitch'
             },
             {
-                day: 'SAT',
-                time: '3:00 PM PST',
-                title: 'The Jackie Mo Show',
-                showSocials: [],
-                hosts: [
-                    { name: 'Hosted by Jackie Monohan', url: 'https://www.instagram.com/jackiemonahan/' }
-                ],
-                desc: 'Saturday afternoon spotlight.',
-                zoomLink: 'https://bit.ly/JackieMo',
-                type: 'zoom'
-            },
-            {
-                day: 'SUN',
-                time: '11:00 AM PST',
+                day: 'SUN', dayIndex: 0, hour: 11, minute: 0, durationMins: 90, freq: 'monthlyFirst',
+                image: 'show-comedy-coffee.jpg',
                 title: 'Comedy Coffee (1st Sun/Month)',
                 showSocials: [],
                 hosts: [
@@ -882,8 +811,8 @@
                 type: 'zoom'
             },
             {
-                day: 'SUN',
-                time: '7:00 PM PST',
+                day: 'SUN', dayIndex: 0, hour: 19, minute: 0, durationMins: 90, freq: 'weekly',
+                image: 'show-ko-comedy.png',
                 title: 'KO Sunday',
                 showSocials: [],
                 hosts: [
@@ -895,6 +824,258 @@
                 type: 'zoom'
             }
         ];
+
+        // ================================================================
+        // TIME ENGINE
+        // Shows recur at a fixed Pacific WALL-CLOCK time. To place one on a
+        // real world timeline we have to ask what UTC offset Pacific was on
+        // *that particular date*, because it shifts with daylight saving.
+        // ================================================================
+
+        // How far ahead of UTC is `tz` at the moment `date`? (ms, negative west)
+        function tzOffsetMs(tz, date) {
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: tz, hour12: false,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).formatToParts(date).reduce((acc, p) => (acc[p.type] = p.value, acc), {});
+            const asIfUTC = Date.UTC(
+                +parts.year, +parts.month - 1, +parts.day,
+                +parts.hour % 24, +parts.minute, +parts.second
+            );
+            return asIfUTC - date.getTime();
+        }
+
+        // "5pm Pacific on this calendar date" -> the actual instant in time.
+        // Two passes, because the offset itself depends on the instant.
+        function pacificWallTimeToInstant(y, m, d, hh, mm) {
+            const naive = Date.UTC(y, m, d, hh, mm, 0);
+            let instant = new Date(naive);
+            for (let i = 0; i < 2; i++) {
+                instant = new Date(naive - tzOffsetMs(VENUE_TZ, instant));
+            }
+            return instant;
+        }
+
+        // The calendar date as Pacific currently sees it
+        function pacificDateParts(date) {
+            const p = new Intl.DateTimeFormat('en-US', {
+                timeZone: VENUE_TZ,
+                year: 'numeric', month: '2-digit', day: '2-digit'
+            }).formatToParts(date).reduce((a, x) => (a[x.type] = x.value, a), {});
+            return { y: +p.year, m: +p.month - 1, d: +p.day };
+        }
+
+        // Next start time for a show, at or after `from`.
+        // A show already underway still counts as "next" until it ends.
+        function nextOccurrence(show, from) {
+            from = from || new Date();
+            const today = pacificDateParts(from);
+            for (let i = 0; i <= 70; i++) {
+                const probe = new Date(Date.UTC(today.y, today.m, today.d + i));
+                if (probe.getUTCDay() !== show.dayIndex) continue;
+                const y = probe.getUTCFullYear(), m = probe.getUTCMonth(), d = probe.getUTCDate();
+                if (show.freq === 'monthlyFirst' && d > 7) continue;
+                const startsAt = pacificWallTimeToInstant(y, m, d, show.hour, show.minute);
+                if (startsAt.getTime() + show.durationMins * 60000 > from.getTime()) return startsAt;
+            }
+            return null;
+        }
+
+        // ---- Labels ------------------------------------------------------
+        // "PT" is correct all year. "PST" is wrong from March to November.
+        function ptLabel(show) {
+            const h = show.hour % 12 === 0 ? 12 : show.hour % 12;
+            const ampm = show.hour < 12 ? 'AM' : 'PM';
+            return h + ':' + String(show.minute).padStart(2, '0') + ' ' + ampm + ' PT';
+        }
+
+        const viewerTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        function viewerIsPacific() {
+            try {
+                const now = new Date();
+                return tzOffsetMs(viewerTz, now) === tzOffsetMs(VENUE_TZ, now);
+            } catch (e) { return true; }
+        }
+
+        // The same moment, written in the viewer's own timezone
+        function localLabel(instant, withDay) {
+            if (!instant) return '';
+            const opts = { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
+            if (withDay) opts.weekday = 'short';
+            return new Intl.DateTimeFormat(undefined, opts).format(instant);
+        }
+
+        function countdownText(ms) {
+            let secs = Math.max(0, Math.floor(ms / 1000));
+            const d = Math.floor(secs / 86400); secs -= d * 86400;
+            const h = Math.floor(secs / 3600);  secs -= h * 3600;
+            const m = Math.floor(secs / 60);
+            if (d) return d + (d === 1 ? ' day ' : ' days ') + h + 'h';
+            if (h) return h + 'h ' + m + 'm';
+            return m + (m === 1 ? ' minute' : ' minutes');
+        }
+
+        // ================================================================
+        // ADD TO CALENDAR
+        // Weekly shows export as a repeating series anchored to the venue's
+        // Pacific timezone, so they follow the club across daylight saving
+        // rather than drifting with the subscriber's own clock.
+        // ================================================================
+        function rrule(show) {
+            const byday = ['SU','MO','TU','WE','TH','FR','SA'][show.dayIndex];
+            return show.freq === 'monthlyFirst'
+                ? 'RRULE:FREQ=MONTHLY;BYDAY=1' + byday
+                : 'RRULE:FREQ=WEEKLY;BYDAY=' + byday;
+        }
+
+        function pad2(n) { return String(n).padStart(2, '0'); }
+
+        // Local (floating) timestamp in a given zone, for DTSTART;TZID=...
+        function icsLocalStamp(instant, tz) {
+            const p = new Intl.DateTimeFormat('en-US', {
+                timeZone: tz, hour12: false,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).formatToParts(instant).reduce((a, x) => (a[x.type] = x.value, a), {});
+            return p.year + p.month + p.day + 'T' + pad2(+p.hour % 24) + p.minute + p.second;
+        }
+
+        function utcStamp(instant) {
+            return instant.getUTCFullYear() + pad2(instant.getUTCMonth() + 1) + pad2(instant.getUTCDate())
+                 + 'T' + pad2(instant.getUTCHours()) + pad2(instant.getUTCMinutes()) + '00Z';
+        }
+
+        function showDescription(show) {
+            const hosts = (show.hosts || []).map(h => h.name).join(', ');
+            const where = show.type === 'twitch'
+                ? 'Watch on Twitch: https://twitch.tv/comedyhub'
+                : 'Zoom audience: ' + (show.zoomLink || '') + '\nAlso streaming on Twitch: https://twitch.tv/comedyhub';
+            return [show.desc, hosts, '', where, '', 'Comedy Hub - https://comedyhublive.com'].join('\n');
+        }
+
+        function showLocation(show) {
+            return show.type === 'twitch'
+                ? 'https://twitch.tv/comedyhub'
+                : (show.zoomLink || 'https://comedyhublive.com');
+        }
+
+        function googleCalUrl(show) {
+            const start = nextOccurrence(show);
+            if (!start) return '#';
+            const end = new Date(start.getTime() + show.durationMins * 60000);
+            const params = new URLSearchParams({
+                action: 'TEMPLATE',
+                text: show.title + ' | Comedy Hub',
+                dates: utcStamp(start) + '/' + utcStamp(end),
+                details: showDescription(show),
+                location: showLocation(show),
+                ctz: VENUE_TZ
+            });
+            return 'https://calendar.google.com/calendar/render?' + params.toString()
+                 + '&recur=' + encodeURIComponent(rrule(show));
+        }
+
+        // Minimal VTIMEZONE for US Pacific, so Outlook and older desktop
+        // clients can resolve TZID=America/Los_Angeles.
+        const PACIFIC_VTIMEZONE = [
+            'BEGIN:VTIMEZONE',
+            'TZID:America/Los_Angeles',
+            'X-LIC-LOCATION:America/Los_Angeles',
+            'BEGIN:DAYLIGHT',
+            'TZOFFSETFROM:-0800',
+            'TZOFFSETTO:-0700',
+            'TZNAME:PDT',
+            'DTSTART:19700308T020000',
+            'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU',
+            'END:DAYLIGHT',
+            'BEGIN:STANDARD',
+            'TZOFFSETFROM:-0700',
+            'TZOFFSETTO:-0800',
+            'TZNAME:PST',
+            'DTSTART:19701101T020000',
+            'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU',
+            'END:STANDARD',
+            'END:VTIMEZONE'
+        ];
+
+        function escIcs(text) {
+            return String(text)
+                .replace(/\\/g, '\\\\')
+                .replace(/;/g, '\\;')
+                .replace(/,/g, '\\,')
+                .replace(/\r?\n/g, '\\n');
+        }
+
+        // RFC 5545: content lines must not exceed 75 octets. Fold on octet
+        // count, not character count, so accented names stay intact.
+        function foldIcsLine(line) {
+            const enc = new TextEncoder();
+            if (enc.encode(line).length <= 75) return line;
+            const out = [];
+            let cur = '', curBytes = 0, limit = 75;
+            for (const ch of line) {
+                const chBytes = enc.encode(ch).length;
+                if (curBytes + chBytes > limit) {
+                    out.push(cur);
+                    cur = ' ' + ch;
+                    curBytes = 1 + chBytes;
+                    limit = 75;
+                } else {
+                    cur += ch;
+                    curBytes += chBytes;
+                }
+            }
+            if (cur) out.push(cur);
+            return out.join('\r\n');
+        }
+
+        function buildIcs(show) {
+            const start = nextOccurrence(show);
+            if (!start) return null;
+            const end = new Date(start.getTime() + show.durationMins * 60000);
+            const uid = 'comedyhub-' + show.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '@comedyhublive.com';
+            return [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Comedy Hub//Schedule//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH'
+            ].concat(PACIFIC_VTIMEZONE, [
+                'BEGIN:VEVENT',
+                'UID:' + uid,
+                'DTSTAMP:' + utcStamp(new Date()),
+                'DTSTART;TZID=America/Los_Angeles:' + icsLocalStamp(start, VENUE_TZ),
+                'DTEND;TZID=America/Los_Angeles:' + icsLocalStamp(end, VENUE_TZ),
+                rrule(show),
+                'SUMMARY:' + escIcs(show.title + ' | Comedy Hub'),
+                'DESCRIPTION:' + escIcs(showDescription(show)),
+                'LOCATION:' + escIcs(showLocation(show)),
+                'URL:https://comedyhublive.com',
+                'BEGIN:VALARM',
+                'TRIGGER:-PT15M',
+                'ACTION:DISPLAY',
+                'DESCRIPTION:' + escIcs(show.title + ' starts in 15 minutes'),
+                'END:VALARM',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ]).map(foldIcsLine).join('\r\n');
+        }
+
+        function downloadIcs(show) {
+            const body = buildIcs(show);
+            if (!body) return;
+            const blob = new Blob([body], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = show.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '-comedyhub.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
 
         // UI Functions
         function toggleAuthModal() {
@@ -1054,7 +1235,24 @@
             if (!grid) return;
             grid.innerHTML = '';
 
-            scheduleData.forEach(show => {
+            const showsLocal = !viewerIsPacific();
+
+            scheduleData.forEach((show, showIndex) => {
+                const nextStart = nextOccurrence(show);
+                const ptTime = ptLabel(show);
+                const localTime = (showsLocal && nextStart) ? localLabel(nextStart, true) : '';
+
+                // Show artwork. Ratios vary wildly (square flyers, wide logos),
+                // so every panel is a fixed square box with object-contain --
+                // nothing gets cropped and the rows still line up.
+                const artwork = show.image ? `
+                    <div class="flex-shrink-0 w-full md:w-44">
+                        <div class="w-full aspect-square bg-black/40 border border-white/10 rounded-lg overflow-hidden flex items-center justify-center p-2">
+                            <img src="${show.image}" alt="${show.title} artwork" loading="lazy" decoding="async"
+                                 class="max-w-full max-h-full w-auto h-auto object-contain">
+                        </div>
+                    </div>` : '';
+
                 let accentColor = 'cyber-purple';
                 let hoverBorderClass = 'hover:border-purple-500/50';
                 let textColorClass = 'text-purple-500';
@@ -1083,7 +1281,7 @@
                 if (show.type === 'twitch') {
                     actionBtn = `
                         <a href="https://twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white rounded font-medium flex items-center justify-center gap-2 transition-colors">
-                            <i data-lucide="twitch" class="w-4 h-4"></i> Watch on Twitch
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> Watch on Twitch
                         </a>`;
                 } else {
                     if (currentUser) {
@@ -1129,11 +1327,13 @@
                 const card = document.createElement('div');
                 card.className = `group bg-cyber-charcoal border border-white/5 ${hoverBorderClass} transition-all duration-300 p-6 flex flex-col md:flex-row gap-6 items-center reveal-on-scroll`;
                 card.innerHTML = `
-                    <div class="flex-shrink-0 w-full md:w-32 text-center md:text-left">
-                        <span class="block ${textColorClass} font-display font-bold text-2xl">${show.day}</span>
-                        <span class="block text-white text-sm opacity-80">${show.time}</span>
-                    </div>
-                    <div class="flex-grow text-center md:text-left border-l-0 md:border-l border-white/10 md:pl-6">
+                    ${artwork}
+                    <div class="flex-grow text-center md:text-left min-w-0">
+                        <div class="flex flex-wrap items-baseline justify-center md:justify-start gap-x-3 gap-y-1 mb-2">
+                            <span class="${textColorClass} font-display font-bold text-2xl leading-none">${show.day}</span>
+                            <span class="text-white text-sm font-bold">${ptTime}</span>
+                            ${localTime ? `<span class="text-gray-500 text-xs">${localTime} your time</span>` : ''}
+                        </div>
                         <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
                             ${show.type === 'zoom-only' ? '<span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-500 text-[10px] font-bold uppercase rounded border border-yellow-500/20">Zoom Exclusive</span>' : ''}
                              ${show.type === 'twitch' ? '<span class="px-2 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] font-bold uppercase rounded border border-purple-500/20">Twitch Only</span>' : ''}
@@ -1147,8 +1347,11 @@
                         </div>
                         <p class="text-gray-400 mb-3 text-sm">${show.desc}</p>
                     </div>
-                    <div class="flex-shrink-0 w-full md:w-auto">
+                    <div class="flex-shrink-0 w-full md:w-auto flex flex-col items-stretch md:items-end gap-2">
                         ${actionBtn}
+                        <button class="cal-btn text-xs text-gray-500 hover:text-cyber-gold transition-colors flex items-center justify-center md:justify-end gap-1.5" data-cal-index="${showIndex}">
+                            <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> Add to calendar
+                        </button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1157,9 +1360,156 @@
             document.querySelectorAll('.signin-trigger').forEach(btn => {
                 btn.addEventListener('click', toggleAuthModal);
             });
+            wireCalendarButtons(grid);
 
             if (window.lucide) lucide.createIcons();
             initObserver();
+        }
+
+        // ================================================================
+        // UP NEXT BANNER + LIVE STATUS
+        // ================================================================
+        let isChannelLive = false;
+        let upNextTimer = null;
+
+        function findNextShow(from) {
+            from = from || new Date();
+            let best = null;
+            scheduleData.forEach(show => {
+                const start = nextOccurrence(show, from);
+                if (!start) return;
+                if (!best || start < best.start) {
+                    best = { show, start, end: new Date(start.getTime() + show.durationMins * 60000) };
+                }
+            });
+            return best;
+        }
+
+        function renderUpNext() {
+            const el = document.getElementById('up-next');
+            if (!el) return;
+
+            const next = findNextShow();
+            if (!next) { el.classList.add('hidden'); return; }
+            el.classList.remove('hidden');
+
+            const now = new Date();
+            const started = now >= next.start;
+            const showsLocal = !viewerIsPacific();
+
+            // Pacific time is the venue's own clock; the local line is a convenience.
+            const ptTime = ptLabel(next.show);
+            const dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][next.show.dayIndex];
+            const localLine = showsLocal
+                ? '<span class="text-gray-400">(' + localLabel(next.start, true) + ' your time)</span>'
+                : '';
+
+            let status, accent, ring;
+            if (started && isChannelLive) {
+                status = '<span class="inline-flex items-center gap-2"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-pink opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyber-pink"></span></span>ON NOW</span>';
+                accent = 'text-cyber-pink'; ring = 'border-cyber-pink/60';
+            } else if (started) {
+                status = 'STARTING NOW';
+                accent = 'text-cyber-pink'; ring = 'border-cyber-pink/50';
+            } else {
+                status = 'STARTS IN ' + countdownText(next.start - now).toUpperCase();
+                accent = 'text-cyber-teal'; ring = 'border-cyber-teal/40';
+            }
+
+            // Same contain-in-a-square treatment as the schedule rows, just
+            // smaller so the banner stays a strip rather than a second card.
+            const art = next.show.image ? (
+                '<div class="flex-shrink-0 self-start md:self-center">' +
+                    '<div class="w-24 h-24 md:w-28 md:h-28 bg-black/40 border border-white/10 rounded-lg overflow-hidden flex items-center justify-center p-1.5">' +
+                        '<img src="' + next.show.image + '" alt="' + next.show.title + ' artwork" loading="lazy" decoding="async" ' +
+                             'class="max-w-full max-h-full w-auto h-auto object-contain">' +
+                    '</div>' +
+                '</div>'
+            ) : '';
+
+            const action = next.show.type === 'twitch'
+                ? '<a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">WATCH ON TWITCH</a>'
+                : (currentUser
+                    ? '<a href="' + next.show.zoomLink + '" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">JOIN ZOOM</a>'
+                    : '<button class="signin-trigger px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap"><i data-lucide="lock" class="w-4 h-4"></i> SIGN IN FOR ZOOM</button>');
+
+            el.innerHTML =
+                '<div class="rounded-lg border ' + ring + ' bg-gradient-to-r from-white/5 to-transparent p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-5">' +
+                    art +
+                    '<div class="flex-grow min-w-0">' +
+                        '<div class="flex items-center gap-3 mb-2">' +
+                            '<span class="text-[11px] font-display font-bold tracking-widest uppercase text-gray-500">Up Next</span>' +
+                            '<span class="text-[11px] font-bold tracking-widest uppercase ' + accent + '">' + status + '</span>' +
+                        '</div>' +
+                        '<h4 class="text-2xl md:text-3xl font-bold text-white mb-1 truncate">' + next.show.title + '</h4>' +
+                        '<p class="text-sm text-gray-300">' +
+                            '<span class="text-white font-bold">' + dayName + ' &middot; ' + ptTime + '</span> ' + localLine +
+                        '</p>' +
+                    '</div>' +
+                    '<div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">' +
+                        action +
+                        '<button class="cal-btn px-5 py-2.5 bg-transparent border border-white/20 hover:border-cyber-gold hover:text-cyber-gold text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-cal-index="' + scheduleData.indexOf(next.show) + '">' +
+                            '<i data-lucide="calendar-plus" class="w-4 h-4"></i> ADD TO CALENDAR' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
+
+            el.querySelectorAll('.signin-trigger').forEach(b => b.addEventListener('click', toggleAuthModal));
+            wireCalendarButtons(el);
+            if (window.lucide) lucide.createIcons();
+
+            // Re-render the moment this show ends so the banner rolls forward
+            clearTimeout(upNextTimer);
+            const msUntilRefresh = Math.min(60000, Math.max(5000, next.end - now));
+            upNextTimer = setTimeout(renderUpNext, msUntilRefresh);
+        }
+
+        // ---- Add to Calendar menu ----------------------------------------
+        function closeCalMenus() {
+            document.querySelectorAll('.cal-menu').forEach(m => m.remove());
+        }
+
+        function wireCalendarButtons(root) {
+            root.querySelectorAll('.cal-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const already = btn.parentElement.querySelector('.cal-menu');
+                    closeCalMenus();
+                    if (already) return;
+
+                    const show = scheduleData[+btn.dataset.calIndex];
+                    const menu = document.createElement('div');
+                    menu.className = 'cal-menu absolute top-full right-0 z-40 mt-2 w-52 bg-cyber-charcoal border border-white/15 rounded shadow-xl overflow-hidden';
+                    menu.innerHTML =
+                        '<a href="' + googleCalUrl(show) + '" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-sm text-gray-200 hover:bg-white/10 transition-colors">Google Calendar</a>' +
+                        '<button class="ics-dl block w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-white/10 transition-colors border-t border-white/10">Apple / Outlook (.ics)</button>';
+                    btn.parentElement.style.position = 'relative';
+                    btn.parentElement.appendChild(menu);
+                    menu.querySelector('.ics-dl').addEventListener('click', () => { downloadIcs(show); closeCalMenus(); });
+                });
+            });
+        }
+
+        document.addEventListener('click', closeCalMenus);
+
+        // ---- Live status -------------------------------------------------
+        // Driven by the Twitch embed's own events. Twitch's Helix API would
+        // need a Client ID and a server-side token, so the embed is the only
+        // credential-free source of truth available to a static page.
+        function setLiveStatus(live) {
+            if (isChannelLive === live) return;
+            isChannelLive = live;
+
+            document.getElementById('live-indicator')?.classList.toggle('hidden', !live);
+
+            document.querySelectorAll('.nav-live-pill').forEach(pill => {
+                pill.classList.toggle('bg-cyber-pink', live);
+                pill.classList.toggle('border-cyber-pink', live);
+                pill.classList.toggle('text-white', live);
+                pill.classList.toggle('animate-pulse', live);
+            });
+
+            renderUpNext();
         }
 
         function initObserver() {
@@ -1175,56 +1525,6 @@
             }
         }
 
-        // ============================================================
-        // FUNDRAISER COUNTDOWN  -  delete along with the #fundraiser
-        // block in the HTML once the event is over.
-        // Sep 2 2026, 9:00 PM Eastern (EDT = UTC-4) -> 01:00 UTC on Sep 3.
-        // ============================================================
-        const FUNDRAISER_START = new Date('2026-09-03T01:00:00Z');
-        const FUNDRAISER_END   = new Date('2026-09-03T04:00:00Z'); // assume a ~3 hour show
-
-        function updateFundraiserCountdown() {
-            const el = document.getElementById('fundraiser-countdown');
-            const badge = document.getElementById('fundraiser-badge');
-            if (!el) return;
-
-            const now = new Date();
-
-            if (now >= FUNDRAISER_END) {
-                el.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i> This event has ended &mdash; thank you for supporting City of Hope.';
-                el.className = 'flex items-center gap-2 text-gray-400 text-sm font-bold';
-                if (badge) {
-                    badge.innerHTML = '<i data-lucide="heart-handshake" class="w-4 h-4"></i> Thank You';
-                    badge.className = 'inline-flex items-center gap-2 px-3 py-1 bg-white/10 text-gray-300 text-[12.5px] font-bold uppercase tracking-wider rounded';
-                }
-                if (window.lucide) lucide.createIcons();
-                return true; // done, stop ticking
-            }
-
-            if (now >= FUNDRAISER_START) {
-                el.innerHTML = '<i data-lucide="radio" class="w-4 h-4"></i> Happening right now &mdash; jump in!';
-                el.className = 'flex items-center gap-2 text-cyber-pink text-sm font-bold animate-pulse';
-                if (badge) {
-                    badge.innerHTML = '<i data-lucide="radio" class="w-4 h-4"></i> Live Now';
-                    badge.className = 'inline-flex items-center gap-2 px-3 py-1 bg-cyber-pink text-white text-[12.5px] font-bold uppercase tracking-wider rounded animate-pulse';
-                }
-                if (window.lucide) lucide.createIcons();
-                return false;
-            }
-
-            let secs = Math.floor((FUNDRAISER_START - now) / 1000);
-            const d = Math.floor(secs / 86400); secs -= d * 86400;
-            const h = Math.floor(secs / 3600);  secs -= h * 3600;
-            const m = Math.floor(secs / 60);
-            const parts = [];
-            if (d) parts.push(d + (d === 1 ? ' day' : ' days'));
-            if (d || h) parts.push(h + (h === 1 ? ' hour' : ' hours'));
-            parts.push(m + (m === 1 ? ' minute' : ' minutes'));
-            el.innerHTML = '<i data-lucide="timer" class="w-4 h-4"></i> Starts in ' + parts.join(', ');
-            el.className = 'flex items-center gap-2 text-cyber-teal text-sm font-bold';
-            if (window.lucide) lucide.createIcons();
-            return false;
-        }
 
         // Twitch Player Logic
         function initTwitchPlayer() {
@@ -1268,25 +1568,18 @@
 
             const player = new Twitch.Embed("twitch-embed", options);
 
-            player.addEventListener(Twitch.Embed.ONLINE, () => {
-                console.log('Online');
-                document.getElementById('live-indicator')?.classList.remove('hidden');
-            });
-
-            player.addEventListener(Twitch.Embed.OFFLINE, () => {
-                console.log('Offline');
-                document.getElementById('live-indicator')?.classList.add('hidden');
-            });
+            player.addEventListener(Twitch.Embed.ONLINE,  () => setLiveStatus(true));
+            player.addEventListener(Twitch.Embed.OFFLINE, () => setLiveStatus(false));
             
-            // Backup check for live status
+            // Backup poll, in case an ONLINE event is missed on slow connections
             setInterval(() => {
-                 try {
-                     const video = player.getPlayer();
-                     if (video && !video.isPaused()) {
-                          document.getElementById('live-indicator')?.classList.remove('hidden');
-                     }
-                 } catch(e) {}
-            }, 30000);
+                try {
+                    const video = player.getPlayer();
+                    if (video && typeof video.getPlaybackStats === 'function') {
+                        setLiveStatus(!!video.getPlaybackStats()?.playbackRate || !video.isPaused());
+                    }
+                } catch (e) {}
+            }, 60000);
         }
 
         // Initialization Logic
@@ -1297,17 +1590,20 @@
             const yearEl = document.getElementById('copyright-year');
             if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-            // Fundraiser countdown (ticks every 30s until the show is over)
-            if (!updateFundraiserCountdown()) {
-                const fundraiserTimer = setInterval(() => {
-                    if (updateFundraiserCountdown()) clearInterval(fundraiserTimer);
-                }, 30000);
-            }
 
             // Timezone
             const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const tzDisplay = document.getElementById('user-timezone');
-            if(tzDisplay) tzDisplay.textContent = userTimezone;
+            if (tzDisplay) {
+                // e.g. "America/Los_Angeles" -> "Los Angeles (PDT)"
+                const city = userTimezone.split('/').pop().replace(/_/g, ' ');
+                let abbr = '';
+                try {
+                    abbr = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+                        .formatToParts(new Date()).find(x => x.type === 'timeZoneName')?.value || '';
+                } catch (e) {}
+                tzDisplay.textContent = abbr ? city + ' (' + abbr + ')' : city;
+            }
 
             // Event Listeners for Static Elements
             document.getElementById('signin-btn')?.addEventListener('click', toggleAuthModal);
@@ -1329,8 +1625,10 @@
             window.toggleMobileMenu = toggleMobileMenu; 
             window.toggleAuthModal = toggleAuthModal; // Fallback for inline onclicks
 
-            // Render initial (logged out) schedule
+            // Render initial (logged out) schedule + up-next banner
             renderSchedule();
+            renderUpNext();
+            setInterval(renderUpNext, 30000);
 
             // Init Twitch
             initTwitchPlayer();
