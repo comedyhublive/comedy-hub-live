@@ -517,7 +517,7 @@
                             <div class="flex flex-col gap-2 mb-6">
                                 <div class="flex items-center gap-2 text-white font-bold">
                                     <i data-lucide="calendar" class="w-5 h-5 text-cyber-gold"></i>
-                                    September's Show Date Will Be Announced Soon
+                                    Friday, October 16 &middot; 7:00 PM PT
                                 </div>
                                 <p class="text-gray-400 text-sm max-w-lg">
                                     Sammy tries out all of his new material before taking it on the road. Catch the fresh bits first on Twitch or join the interactive Zoom audience!
@@ -747,6 +747,18 @@
                 ],
                 desc: 'Digital absurdity and multimedia comedy.',
                 zoomLink: 'https://bit.ly/DSScmdy',
+                type: 'zoom'
+            },
+            {
+                day: 'TUE', dayIndex: 2, hour: 19, minute: 30, durationMins: 90, freq: 'weekly',
+                image: 'show-fb4tb.jpg',
+                title: 'Facebook For The Blind',
+                showSocials: [
+                    { name: 'FB4tB on Instagram', url: 'https://www.instagram.com/fb4tb_wastaken/' }
+                ],
+                hosts: [],
+                desc: 'Listener-supported, descriptive video for the visually and Facebook impaired.',
+                zoomLink: 'https://us02web.zoom.us/j/6483315317',
                 type: 'zoom'
             },
             {
@@ -1277,32 +1289,34 @@
                     groupHoverTextClass = 'group-hover:text-cyan-400';
                 }
 
-                let actionBtn = '';
-                if (show.type === 'twitch') {
-                    actionBtn = `
-                        <a href="https://twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white rounded font-medium flex items-center justify-center gap-2 transition-colors">
+                const twitchBtn = `
+                        <a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white rounded font-medium flex items-center justify-center gap-2 transition-colors whitespace-nowrap">
                             <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> Watch on Twitch
                         </a>`;
+
+                // Every show streams on Twitch, so every row offers it.
+                // Twitch-only shows have no Zoom, so that button stands alone.
+                let actionBtn = '';
+                if (show.type === 'twitch') {
+                    actionBtn = twitchBtn;
+                } else if (currentUser) {
+                    actionBtn = `
+                        <a href="${show.zoomLink}" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-teal hover:bg-white text-black hover:text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)] whitespace-nowrap">
+                            <i data-lucide="video" class="w-4 h-4"></i> JOIN ZOOM AUDIENCE
+                        </a>` + twitchBtn;
                 } else {
-                    if (currentUser) {
-                         actionBtn = `
-                            <a href="${show.zoomLink}" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-teal hover:bg-white text-black hover:text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
-                                <i data-lucide="video" class="w-4 h-4"></i> JOIN ZOOM AUDIENCE
-                            </a>`;
-                    } else {
-                        actionBtn = `
-                            <button class="signin-trigger w-full md:w-auto px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-300 rounded font-medium flex items-center justify-center gap-2 transition-colors">
-                                <i data-lucide="lock" class="w-4 h-4"></i> Sign In for Zoom Link
-                            </button>`;
-                    }
+                    actionBtn = `
+                        <button class="signin-trigger w-full md:w-auto px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-300 rounded font-medium flex items-center justify-center gap-2 transition-colors whitespace-nowrap">
+                            <i data-lucide="lock" class="w-4 h-4"></i> Sign In for Zoom Link
+                        </button>` + twitchBtn;
                 }
 
                 // --- Generate Inline Social Buttons for Show Title ---
                 let showSocialsHtml = '';
                 if (show.showSocials && show.showSocials.length > 0) {
                     showSocialsHtml = show.showSocials.map(social => `
-                        <a href="${social.url}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors ml-2 inline-flex items-center" title="Show Social">
-                            <i data-lucide="${social.icon}" class="w-4 h-4"></i>
+                        <a href="${social.url}" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity inline-flex items-center" title="${social.name || 'Show Social'}">
+                            <img src="ig-icon.png" alt="" width="20" height="20" loading="lazy" class="w-5 h-5 rounded-md">
                         </a>
                     `).join('');
                 }
@@ -1425,11 +1439,13 @@
                 '</div>'
             ) : '';
 
+            const upNextTwitch = '<a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(145,70,255,0.3)]">WATCH ON TWITCH</a>';
+
             const action = next.show.type === 'twitch'
-                ? '<a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(145,70,255,0.3)]">WATCH ON TWITCH</a>'
+                ? upNextTwitch
                 : (currentUser
-                    ? '<a href="' + next.show.zoomLink + '" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">JOIN ZOOM AUDIENCE</a>'
-                    : '<button class="signin-trigger px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap"><i data-lucide="lock" class="w-5 h-5"></i> SIGN IN FOR ZOOM</button>');
+                    ? '<a href="' + next.show.zoomLink + '" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">JOIN ZOOM AUDIENCE</a>' + upNextTwitch
+                    : '<button class="signin-trigger px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap"><i data-lucide="lock" class="w-5 h-5"></i> SIGN IN FOR ZOOM</button>' + upNextTwitch);
 
             const hostLine = (next.show.hosts || []).map(h => h.name).join(' ');
 
@@ -1453,7 +1469,7 @@
                                     '</div>' +
                                     '<p class="text-gray-400 text-sm max-w-lg">' + next.show.desc + '</p>' +
                                 '</div>' +
-                                '<div class="flex flex-col sm:flex-row gap-4 mt-4">' +
+                                '<div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 mt-4">' +
                                     action +
                                     '<button class="cal-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-gold hover:text-cyber-gold text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-cal-index="' + scheduleData.indexOf(next.show) + '">' +
                                         '<i data-lucide="calendar-plus" class="w-5 h-5"></i> ADD TO CALENDAR' +
