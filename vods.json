@@ -1,5 +1,48 @@
 {
-  "updated": null,
+  "updated": "2026-09-16T02:10:02.560Z",
   "channel": "comedyhub",
-  "shows": {}
+  "shows": {
+    "chirping-bird": {
+      "url": "https://www.twitch.tv/videos/2874432597",
+      "title": "Chirping Bird Presents LooksMaxxing Week 26: Creating Dimples With Crazy Glue Tutorial",
+      "created_at": "2026-09-15T00:13:07Z",
+      "duration": "1:28:06"
+    },
+    "kapfer": {
+      "url": "https://www.twitch.tv/videos/2875325338",
+      "title": "Anthony Kapfer's Digital Something Show",
+      "created_at": "2026-09-16T01:02:17Z",
+      "duration": "59:33"
+    },
+    "jackie-mo": {
+      "url": "https://www.twitch.tv/videos/2864591459",
+      "title": "The Jackie Mo Show || New Time Every Thursday 5pm PT",
+      "created_at": "2026-09-04T00:01:20Z",
+      "duration": "1:08:10"
+    },
+    "living-room": {
+      "url": "https://www.twitch.tv/videos/2871709089",
+      "title": "The Living Room Show",
+      "created_at": "2026-09-12T00:05:22Z",
+      "duration": "57:58"
+    },
+    "ko-friday": {
+      "url": "https://www.twitch.tv/videos/2871814831",
+      "title": "KO Comedy Friday",
+      "created_at": "2026-09-12T02:11:29Z",
+      "duration": "1:09:18"
+    },
+    "comedy-coffee": {
+      "url": "https://www.twitch.tv/videos/2867091386",
+      "title": "Comedy Coffee",
+      "created_at": "2026-09-06T18:01:45Z",
+      "duration": "1:06:00"
+    },
+    "ko-sunday": {
+      "url": "https://www.twitch.tv/videos/2861244673",
+      "title": "KO Sunday",
+      "created_at": "2026-08-31T02:02:32Z",
+      "duration": "1:04:07"
+    }
+  }
 }
