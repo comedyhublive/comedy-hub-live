@@ -728,6 +728,7 @@
             {
                 day: 'MON', dayIndex: 1, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-chirping-bird.jpg',
+                id: 'chirping-bird',
                 title: 'Chirping Bird Comedy',
                 showSocials: [],
                 hosts: [
@@ -740,7 +741,8 @@
             {
                 day: 'TUE', dayIndex: 2, hour: 18, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-kapfer.png',
-                title: 'Anthony Kapfer Digital Something',
+                id: 'kapfer',
+                title: "Anthony Kapfer's Digital Something Show",
                 showSocials: [],
                 hosts: [
                     { name: 'Hosted by Anthony Kapfer', url: 'https://www.instagram.com/anthonykapfer/' }
@@ -752,6 +754,7 @@
             {
                 day: 'TUE', dayIndex: 2, hour: 19, minute: 30, durationMins: 90, freq: 'weekly',
                 image: 'show-fb4tb.jpg',
+                id: 'fb4tb',
                 title: 'Facebook For The Blind',
                 showSocials: [
                     { name: 'FB4tB on Instagram', url: 'https://www.instagram.com/fb4tb_wastaken/' }
@@ -764,6 +767,7 @@
             {
                 day: 'THU', dayIndex: 4, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-jackie-mo.jpg',
+                id: 'jackie-mo',
                 title: 'The Jackie Mo Show',
                 showSocials: [],
                 hosts: [
@@ -776,6 +780,7 @@
             {
                 day: 'FRI', dayIndex: 5, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-living-room.png',
+                id: 'living-room',
                 title: 'The Living Room Show',
                 showSocials: [],
                 hosts: [
@@ -788,6 +793,7 @@
             {
                 day: 'FRI', dayIndex: 5, hour: 19, minute: 0, durationMins: 120, freq: 'weekly',
                 image: 'show-ko-comedy.png',
+                id: 'ko-friday',
                 title: 'KO Comedy & After Party',
                 showSocials: [],
                 hosts: [
@@ -801,6 +807,9 @@
             {
                 day: 'SAT', dayIndex: 6, hour: 7, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-new-blerd.png',
+                id: 'new-blerd',
+                replayUrl: 'https://www.youtube.com/@NewBlerdOrder',
+                replayLabel: 'Watch past episodes on YouTube',
                 title: 'New Blerd Order',
                 showSocials: [],
                 hosts: [
@@ -813,6 +822,7 @@
             {
                 day: 'SUN', dayIndex: 0, hour: 11, minute: 0, durationMins: 90, freq: 'monthlyFirst',
                 image: 'show-comedy-coffee.jpg',
+                id: 'comedy-coffee',
                 title: 'Comedy Coffee (1st Sun/Month)',
                 showSocials: [],
                 hosts: [
@@ -825,6 +835,7 @@
             {
                 day: 'SUN', dayIndex: 0, hour: 19, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-ko-comedy.png',
+                id: 'ko-sunday',
                 title: 'KO Sunday',
                 showSocials: [],
                 hosts: [
@@ -1366,6 +1377,7 @@
                         <button class="cal-btn text-xs text-gray-500 hover:text-cyber-gold transition-colors flex items-center justify-center md:justify-end gap-1.5" data-cal-index="${showIndex}">
                             <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> Add to calendar
                         </button>
+                        ${replayLink(show, true)}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1378,6 +1390,81 @@
 
             if (window.lucide) lucide.createIcons();
             initObserver();
+        }
+
+        // ================================================================
+        // REPLAY LINKS
+        // vods.json is regenerated a few times a day by the GitHub Action in
+        // .github/workflows/twitch-vods.yml. It is keyed by the show `id`
+        // fields above, so those ids must stay in sync with the ids in
+        // scripts/fetch-vods.mjs.
+        //
+        // Everything here degrades to nothing: if vods.json is missing, stale
+        // or malformed, the page renders exactly as it did before.
+        // ================================================================
+        let vodData = {};
+
+        // Twitch deletes past broadcasts after 60 days (Partner/Turbo/Prime
+        // tier). If the Action ever stops running we would keep advertising
+        // links that 404, so ignore anything past the window client-side too.
+        const VOD_MAX_AGE_DAYS = 60;
+
+        async function loadVods() {
+            try {
+                const res = await fetch('vods.json', { cache: 'no-cache' });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data || typeof data.shows !== 'object') return;
+
+                const cutoff = Date.now() - VOD_MAX_AGE_DAYS * 86400000;
+                const fresh = {};
+                Object.entries(data.shows).forEach(([id, v]) => {
+                    if (!v || !v.url) return;
+                    if (new Date(v.created_at).getTime() < cutoff) return;
+                    fresh[id] = v;
+                });
+                vodData = fresh;
+
+                renderSchedule();
+                renderUpNext();
+            } catch (e) {
+                // Offline, blocked, or the file was never published - stay quiet.
+                console.log('No replay data available:', e.message);
+            }
+        }
+
+        function relativeDay(iso) {
+            const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+            if (days <= 0) return 'today';
+            if (days === 1) return 'yesterday';
+            if (days < 7) return days + ' days ago';
+            if (days < 14) return 'last week';
+            return Math.floor(days / 7) + ' weeks ago';
+        }
+
+        // Returns the markup for a show's replay link, or '' when there isn't one.
+        function replayLink(show, compact) {
+            // A show can pin its own destination (New Blerd Order titles its
+            // Twitch VODs by weekly topic, so it points at YouTube instead).
+            if (show.replayUrl) {
+                return '<a href="' + show.replayUrl + '" target="_blank" rel="noopener noreferrer" ' +
+                       'class="text-xs text-gray-500 hover:text-cyber-pink transition-colors flex items-center ' +
+                       (compact ? 'justify-center md:justify-end' : 'justify-center sm:justify-start') + ' gap-1.5">' +
+                       '<i data-lucide="play-circle" class="w-3.5 h-3.5"></i> ' +
+                       (show.replayLabel || 'Watch past episodes') +
+                       '</a>';
+            }
+
+            const v = vodData[show.id];
+            if (!v) return '';
+
+            return '<a href="' + v.url + '" target="_blank" rel="noopener noreferrer" ' +
+                   'title="' + (v.title || '').replace(/"/g, '&quot;') + '" ' +
+                   'class="text-xs text-gray-500 hover:text-cyber-pink transition-colors flex items-center ' +
+                   (compact ? 'justify-center md:justify-end' : 'justify-center sm:justify-start') + ' gap-1.5">' +
+                   '<i data-lucide="play-circle" class="w-3.5 h-3.5"></i> Watch replay &middot; ' +
+                   relativeDay(v.created_at) +
+                   '</a>';
         }
 
         // ================================================================
@@ -1475,6 +1562,9 @@
                                         '<i data-lucide="calendar-plus" class="w-5 h-5"></i> ADD TO CALENDAR' +
                                     '</button>' +
                                 '</div>' +
+                                (replayLink(next.show, false)
+                                    ? '<div class="mt-4">' + replayLink(next.show, false) + '</div>'
+                                    : '') +
                             '</div>' +
                         '</div>' +
                     '</div>' +
@@ -1655,6 +1745,9 @@
             renderSchedule();
             renderUpNext();
             setInterval(renderUpNext, 30000);
+
+            // Pull in the latest Twitch replays, then re-render with them
+            loadVods();
 
             // Init Twitch
             initTwitchPlayer();
