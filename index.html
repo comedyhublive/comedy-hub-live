@@ -1374,10 +1374,10 @@
                     </div>
                     <div class="flex-shrink-0 w-full md:w-auto flex flex-col items-stretch md:items-end gap-2">
                         ${actionBtn}
+                        ${replayButton(show, true)}
                         <button class="cal-btn text-xs text-gray-500 hover:text-cyber-gold transition-colors flex items-center justify-center md:justify-end gap-1.5" data-cal-index="${showIndex}">
                             <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> Add to calendar
                         </button>
-                        ${replayLink(show, true)}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1442,15 +1442,26 @@
             return Math.floor(days / 7) + ' weeks ago';
         }
 
-        // Returns the markup for a show's replay link, or '' when there isn't one.
-        function replayLink(show, compact) {
-            // A show can pin its own destination (New Blerd Order titles its
-            // Twitch VODs by weekly topic, so it points at YouTube instead).
+        // Brand marks for the replay buttons. Inlined for the same reason as
+        // the others: Lucide dropped every brand icon in v1.0.
+        const TWITCH_MARK = '<svg viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4 fill-current flex-shrink-0"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg>';
+        const YOUTUBE_MARK = '<svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current flex-shrink-0"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>';
+
+        // Returns a replay button for a show, or '' when there isn't one.
+        // `inRow` = true for schedule rows, which need full width on mobile.
+        function replayButton(show, inRow) {
+            const width = inRow ? 'w-full md:w-auto ' : '';
+            const base = width + 'px-6 py-3 rounded font-medium flex items-center justify-center gap-2 transition-colors whitespace-nowrap border';
+
+            // A show can pin its own destination. New Blerd Order titles its
+            // Twitch VODs by weekly topic, so it points at YouTube instead.
             if (show.replayUrl) {
+                const isYouTube = /youtube\.com|youtu\.be/.test(show.replayUrl);
                 return '<a href="' + show.replayUrl + '" target="_blank" rel="noopener noreferrer" ' +
-                       'class="text-xs text-gray-500 hover:text-cyber-pink transition-colors flex items-center ' +
-                       (compact ? 'justify-center md:justify-end' : 'justify-center sm:justify-start') + ' gap-1.5">' +
-                       '<i data-lucide="play-circle" class="w-3.5 h-3.5"></i> ' +
+                       'class="' + base + (isYouTube
+                           ? ' border-red-600/60 text-red-500 hover:bg-red-600 hover:text-white hover:border-red-600"'
+                           : ' border-white/20 text-gray-300 hover:bg-white/10"') + '>' +
+                       (isYouTube ? YOUTUBE_MARK : TWITCH_MARK) + ' ' +
                        (show.replayLabel || 'Watch past episodes') +
                        '</a>';
             }
@@ -1459,11 +1470,9 @@
             if (!v) return '';
 
             return '<a href="' + v.url + '" target="_blank" rel="noopener noreferrer" ' +
-                   'title="' + (v.title || '').replace(/"/g, '&quot;') + '" ' +
-                   'class="text-xs text-gray-500 hover:text-cyber-pink transition-colors flex items-center ' +
-                   (compact ? 'justify-center md:justify-end' : 'justify-center sm:justify-start') + ' gap-1.5">' +
-                   '<i data-lucide="play-circle" class="w-3.5 h-3.5"></i> Watch replay &middot; ' +
-                   relativeDay(v.created_at) +
+                   'title="' + (v.title || '').replace(/"/g, '&quot;') + (v.duration ? ' (' + v.duration + ')' : '') + '" ' +
+                   'class="' + base + ' border-cyber-purple/60 text-cyber-purple hover:bg-cyber-purple hover:text-white hover:border-cyber-purple">' +
+                   TWITCH_MARK + ' Watch Replay &middot; ' + relativeDay(v.created_at) +
                    '</a>';
         }
 
@@ -1558,13 +1567,11 @@
                                 '</div>' +
                                 '<div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 mt-4">' +
                                     action +
+                                    replayButton(next.show, false) +
                                     '<button class="cal-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-gold hover:text-cyber-gold text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-cal-index="' + scheduleData.indexOf(next.show) + '">' +
                                         '<i data-lucide="calendar-plus" class="w-5 h-5"></i> ADD TO CALENDAR' +
                                     '</button>' +
                                 '</div>' +
-                                (replayLink(next.show, false)
-                                    ? '<div class="mt-4">' + replayLink(next.show, false) + '</div>'
-                                    : '') +
                             '</div>' +
                         '</div>' +
                     '</div>' +
