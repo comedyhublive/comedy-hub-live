@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-16T02:10:02.560Z",
+  "updated": "2026-09-16T11:21:50.970Z",
   "channel": "comedyhub",
   "shows": {
     "chirping-bird": {
@@ -13,6 +13,12 @@
       "title": "Anthony Kapfer's Digital Something Show",
       "created_at": "2026-09-16T01:02:17Z",
       "duration": "59:33"
+    },
+    "fb4tb": {
+      "url": "https://www.twitch.tv/videos/2875397226",
+      "title": "Facebook For The Blind || New Show!!!",
+      "created_at": "2026-09-16T02:35:53Z",
+      "duration": "52:22"
     },
     "jackie-mo": {
       "url": "https://www.twitch.tv/videos/2864591459",
