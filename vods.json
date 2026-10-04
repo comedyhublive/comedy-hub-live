@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-04T12:12:55.006Z",
+  "updated": "2026-10-04T21:13:34.034Z",
   "channel": "comedyhub",
   "shows": {
     "chirping-bird": {
@@ -39,10 +39,10 @@
       "duration": "1:00:14"
     },
     "comedy-coffee": {
-      "url": "https://www.twitch.tv/videos/2867091386",
+      "url": "https://www.twitch.tv/videos/2891921929",
       "title": "Comedy Coffee",
-      "created_at": "2026-09-06T18:01:45Z",
-      "duration": "1:06:00"
+      "created_at": "2026-10-04T18:14:00Z",
+      "duration": "1:05:06"
     },
     "ko-sunday": {
       "url": "https://www.twitch.tv/videos/2886054210",
