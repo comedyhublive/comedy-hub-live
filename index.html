@@ -485,6 +485,9 @@
             <!-- Up Next banner - filled in by renderUpNext() -->
             <div id="up-next" class="mb-12 hidden reveal-on-scroll"></div>
 
+            <!-- One-off special events, rendered by renderSpecials() -->
+            <div id="special-events"></div>
+
             <!-- Highlighted Special Event -->
             <div class="mb-12 bg-gradient-to-r from-cyber-purple/10 to-cyber-teal/10 border border-cyber-teal/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.15)] reveal-on-scroll">
                 <div class="flex flex-col md:flex-row">
@@ -726,6 +729,24 @@
 
         const scheduleData = [
             {
+                // ---- ONE-OFF HALLOWEEN SPECIAL - safe to delete after 2026-10-29 ----
+                day: 'THU', dayIndex: 4, hour: 18, minute: 0, durationMins: 120,
+                freq: 'once', date: '2026-10-29', special: true,
+                image: 'show-halloween-bash.jpg',
+                id: 'halloween-bash',
+                title: "Zilla Vodnas' Halloween Bash",
+                tagline: 'A Halloween Comedy Show',
+                showSocials: [],
+                hosts: [
+                    { name: 'Hosted by Zilla Vodnas', url: 'https://www.instagram.com/zillavodnas/' },
+                    { name: 'Cohost & Music Guest Anthony Kapfer', url: 'https://www.instagram.com/anthonykapfer/' },
+                    { name: 'Musical Guest Xrayxeroxx', url: 'https://www.instagram.com/xrayxeroxx/' }
+                ],
+                desc: 'Comedians and surprise call-ins all night. Lineups and links are posted here and sent to the KO Comedy email list.',
+                zoomLink: 'https://us02web.zoom.us/j/85359591555?pwd=d38lh1y32uz0w5vNawzI0bALWyOoAZ.1',
+                type: 'zoom'
+            },
+            {
                 day: 'MON', dayIndex: 1, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-chirping-bird.jpg',
                 id: 'chirping-bird',
@@ -893,6 +914,16 @@
         // A show already underway still counts as "next" until it ends.
         function nextOccurrence(show, from) {
             from = from || new Date();
+
+            // A one-off special happens once, on `date` (YYYY-MM-DD, Pacific).
+            // Once it has finished there is no next time, so it returns null
+            // and quietly drops off the page by itself.
+            if (show.freq === 'once') {
+                const [oy, om, od] = show.date.split('-').map(Number);
+                const once = pacificWallTimeToInstant(oy, om - 1, od, show.hour, show.minute);
+                return (once.getTime() + show.durationMins * 60000 > from.getTime()) ? once : null;
+            }
+
             const today = pacificDateParts(from);
             for (let i = 0; i <= 70; i++) {
                 const probe = new Date(Date.UTC(today.y, today.m, today.d + i));
@@ -947,6 +978,7 @@
         // rather than drifting with the subscriber's own clock.
         // ================================================================
         function rrule(show) {
+            if (show.freq === 'once') return null;   // a single dated event
             const byday = ['SU','MO','TU','WE','TH','FR','SA'][show.dayIndex];
             return show.freq === 'monthlyFirst'
                 ? 'RRULE:FREQ=MONTHLY;BYDAY=1' + byday
@@ -996,8 +1028,9 @@
                 location: showLocation(show),
                 ctz: VENUE_TZ
             });
+            const recur = rrule(show);
             return 'https://calendar.google.com/calendar/render?' + params.toString()
-                 + '&recur=' + encodeURIComponent(rrule(show));
+                 + (recur ? '&recur=' + encodeURIComponent(recur) : '');
         }
 
         // Minimal VTIMEZONE for US Pacific, so Outlook and older desktop
@@ -1070,8 +1103,8 @@
                 'UID:' + uid,
                 'DTSTAMP:' + utcStamp(new Date()),
                 'DTSTART;TZID=America/Los_Angeles:' + icsLocalStamp(start, VENUE_TZ),
-                'DTEND;TZID=America/Los_Angeles:' + icsLocalStamp(end, VENUE_TZ),
                 rrule(show),
+                'DTEND;TZID=America/Los_Angeles:' + icsLocalStamp(end, VENUE_TZ),
                 'SUMMARY:' + escIcs(show.title + ' | Comedy Hub'),
                 'DESCRIPTION:' + escIcs(showDescription(show)),
                 'LOCATION:' + escIcs(showLocation(show)),
@@ -1083,7 +1116,7 @@
                 'END:VALARM',
                 'END:VEVENT',
                 'END:VCALENDAR'
-            ]).map(foldIcsLine).join('\r\n');
+            ]).filter(Boolean).map(foldIcsLine).join('\r\n');
         }
 
         function downloadIcs(show) {
@@ -1174,6 +1207,8 @@
             }
             if (window.lucide) lucide.createIcons();
             renderSchedule();
+            renderUpNext();
+            renderSpecials();
         }
 
         // Database Helper
@@ -1261,6 +1296,8 @@
             const showsLocal = !viewerIsPacific();
 
             scheduleData.forEach((show, showIndex) => {
+                if (show.special) return;   // has its own feature card above
+
                 const nextStart = nextOccurrence(show);
                 const ptTime = ptLabel(show);
                 const localTime = (showsLocal && nextStart) ? localLabel(nextStart, true) : '';
@@ -1615,6 +1652,124 @@
 
         document.addEventListener('click', closeCalMenus);
 
+        // ================================================================
+        // ONE-OFF SPECIAL EVENTS
+        // Any scheduleData entry with `special: true` gets its own feature
+        // card here instead of a row in the weekly grid. Once the event has
+        // passed nextOccurrence() returns null and the card removes itself,
+        // so nothing goes stale if nobody edits the page.
+        // ================================================================
+        function renderSpecials() {
+            const mount = document.getElementById('special-events');
+            if (!mount) return;
+
+            const now = new Date();
+            const upcoming = scheduleData
+                .filter(show => show.special)
+                .map(show => ({ show, start: nextOccurrence(show, now) }))
+                .filter(x => x.start)
+                .sort((a, b) => a.start - b.start);
+
+            if (!upcoming.length) { mount.innerHTML = ''; return; }
+
+            mount.innerHTML = upcoming.map(({ show, start }) => {
+                const started = now >= start;
+
+                // The venue clock, plus Eastern since the flyers quote both.
+                const ptTime = ptLabel(show);
+                const etTime = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit'
+                }).format(start) + ' ET';
+                const dateLine = new Intl.DateTimeFormat('en-US', {
+                    timeZone: VENUE_TZ, weekday: 'long', month: 'long', day: 'numeric'
+                }).format(start);
+
+                const localLine = viewerIsPacific() ? ''
+                    : '<span class="text-gray-400 font-normal text-sm">(' + localLabel(start, true) + ' your time)</span>';
+
+                const status = started
+                    ? '<span class="inline-flex items-center gap-2"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-400"></span></span>HAPPENING NOW</span>'
+                    : 'STARTS IN ' + countdownText(start - now).toUpperCase();
+
+                const lineup = (show.hosts || []).map(h =>
+                    '<a href="' + h.url + '" target="_blank" rel="noopener noreferrer" ' +
+                    'class="inline-flex items-center gap-1.5 hover:text-white transition-colors">' +
+                    h.name +
+                    '<img src="ig-icon.png" alt="" width="18" height="18" loading="lazy" class="w-[18px] h-[18px] rounded">' +
+                    '</a>'
+                ).join('<span class="text-orange-500/50 mx-2">&bull;</span>');
+
+                return '' +
+                '<div class="mb-12 bg-gradient-to-br from-orange-500/10 via-cyber-charcoal to-cyber-purple/20 border border-orange-500/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(249,115,22,0.18)] reveal-on-scroll is-visible">' +
+                    '<div class="flex flex-col md:flex-row">' +
+
+                        '<div class="w-full md:w-2/5 bg-black/40 border-b md:border-b-0 md:border-r border-orange-500/30 flex items-center justify-center p-4 md:min-h-[480px]">' +
+                            '<img src="' + show.image + '" alt="' + show.title + ' flyer" decoding="async" ' +
+                                 'class="w-full h-full max-h-[440px] object-contain rounded">' +
+                        '</div>' +
+
+                        '<div class="w-full md:w-3/5 p-8 flex flex-col justify-center relative">' +
+                            '<div class="absolute top-0 right-0 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>' +
+                            '<div class="relative z-10">' +
+
+                                '<div class="flex flex-wrap items-center gap-3 mb-4">' +
+                                    '<span class="inline-flex items-center gap-2 px-3 py-1 bg-orange-500 text-black text-[12.5px] font-bold uppercase tracking-wider rounded">' +
+                                        '<i data-lucide="ghost" class="w-4 h-4"></i> Halloween Special' +
+                                    '</span>' +
+                                    '<span class="text-[12.5px] font-bold tracking-widest uppercase text-orange-400">' + status + '</span>' +
+                                '</div>' +
+
+                                '<h3 class="text-3xl md:text-5xl font-display font-black text-white mb-2 uppercase leading-none drop-shadow-[0_0_12px_rgba(249,115,22,0.4)]">' +
+                                    show.title +
+                                '</h3>' +
+
+                                (show.tagline ? '<div class="text-xl text-orange-400 font-medium mb-6">' + show.tagline + '</div>' : '<div class="mb-6"></div>') +
+
+                                '<div class="flex flex-col gap-3 mb-6">' +
+                                    '<div class="flex items-start gap-2 text-white font-bold">' +
+                                        '<i data-lucide="calendar" class="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5"></i>' +
+                                        '<span>' + dateLine + ' &middot; ' + ptTime + ' / ' + etTime + ' ' + localLine + '</span>' +
+                                    '</div>' +
+                                    '<div class="flex items-start gap-2 text-gray-300 text-sm">' +
+                                        '<i data-lucide="users" class="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5"></i>' +
+                                        '<span class="leading-relaxed">' + lineup + '</span>' +
+                                    '</div>' +
+                                    '<p class="text-gray-400 text-sm max-w-lg">' + show.desc + '</p>' +
+                                '</div>' +
+
+                                '<div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">' +
+                                    (show.zoomLink
+                                        ? (currentUser
+                                            ? '<a href="' + show.zoomLink + '" target="_blank" rel="noopener noreferrer" ' +
+                                              'class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">' +
+                                              '<i data-lucide="video" class="w-5 h-5"></i> JOIN ZOOM AUDIENCE</a>'
+                                            : '<button class="signin-trigger px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">' +
+                                              '<i data-lucide="lock" class="w-5 h-5"></i> SIGN IN FOR ZOOM</button>')
+                                        : '') +
+                                    '<a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" ' +
+                                       'class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(145,70,255,0.3)]">' +
+                                        TWITCH_MARK + ' WATCH ON TWITCH' +
+                                    '</a>' +
+                                    '<button class="cal-btn px-6 py-3 bg-transparent border border-orange-500/60 hover:bg-orange-500 hover:text-black text-orange-400 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-cal-index="' + scheduleData.indexOf(show) + '">' +
+                                        '<i data-lucide="calendar-plus" class="w-5 h-5"></i> ADD TO CALENDAR' +
+                                    '</button>' +
+                                    '<a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" ' +
+                                       'class="px-6 py-3 bg-transparent border border-white/20 hover:border-white/50 text-gray-300 hover:text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">' +
+                                        '<i data-lucide="mail" class="w-5 h-5"></i> GET THE LINEUP' +
+                                    '</a>' +
+                                '</div>' +
+
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+
+            mount.querySelectorAll('.signin-trigger').forEach(b => b.addEventListener('click', toggleAuthModal));
+            wireCalendarButtons(mount);
+            if (window.lucide) lucide.createIcons();
+        }
+
         // ---- Live status -------------------------------------------------
         // Driven by the Twitch embed's own events. Twitch's Helix API would
         // need a Client ID and a server-side token, so the embed is the only
@@ -1751,7 +1906,8 @@
             // Render initial (logged out) schedule + up-next banner
             renderSchedule();
             renderUpNext();
-            setInterval(renderUpNext, 30000);
+            renderSpecials();
+            setInterval(() => { renderUpNext(); renderSpecials(); }, 30000);
 
             // Pull in the latest Twitch replays, then re-render with them
             loadVods();
