@@ -822,7 +822,7 @@
                     { name: '& Desirée Walsh', url: 'https://www.instagram.com/desiree.lisa.walsh_/' }
                 ],
                 desc: 'Join the party. (After Party is Zoom Only)',
-                zoomLink: 'https://bit.ly/KOcmdy',
+                zoomLink: 'https://us02web.zoom.us/j/81945742580?pwd=lPcZHuUpuuKabrb3UTeNNb7ymE9knn.1',
                 type: 'zoom'
             },
             {
@@ -864,7 +864,7 @@
                     { name: '& Katie Farrell', url: 'https://www.instagram.com/katieisaproblem/' }
                 ],
                 desc: 'Closing the weekend with a knockout lineup.',
-                zoomLink: 'https://bit.ly/KOcmdySunday',
+                zoomLink: 'https://us02web.zoom.us/j/81945742580?pwd=lPcZHuUpuuKabrb3UTeNNb7ymE9knn.1',
                 type: 'zoom'
             }
         ];
@@ -1387,7 +1387,8 @@
                 }
 
                 const card = document.createElement('div');
-                card.className = `group bg-cyber-charcoal border border-white/5 ${hoverBorderClass} transition-all duration-300 p-6 flex flex-col md:flex-row gap-6 items-center reveal-on-scroll`;
+                card.id = 'show-' + show.id;
+                card.className = `group bg-cyber-charcoal border border-white/5 ${hoverBorderClass} transition-all duration-300 p-6 flex flex-col md:flex-row gap-6 items-center reveal-on-scroll scroll-mt-28`;
                 card.innerHTML = `
                     ${artwork}
                     <div class="flex-grow text-center md:text-left min-w-0">
@@ -1412,9 +1413,14 @@
                     <div class="flex-shrink-0 w-full md:w-auto flex flex-col items-stretch md:items-end gap-2">
                         ${actionBtn}
                         ${replayButton(show, true)}
-                        <button class="cal-btn text-xs text-gray-500 hover:text-cyber-gold transition-colors flex items-center justify-center md:justify-end gap-1.5" data-cal-index="${showIndex}">
-                            <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> Add to calendar
-                        </button>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <button class="cal-btn flex-1 md:flex-none px-3 py-2 text-xs text-gray-400 hover:text-cyber-gold border border-white/10 hover:border-cyber-gold/50 rounded transition-colors flex items-center justify-center gap-1.5" data-cal-index="${showIndex}">
+                                <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> Calendar
+                            </button>
+                            <button class="share-btn flex-1 md:flex-none px-3 py-2 text-xs text-gray-400 hover:text-cyber-teal border border-white/10 hover:border-cyber-teal/50 rounded transition-colors flex items-center justify-center gap-1.5" data-share-index="${showIndex}">
+                                <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share
+                            </button>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1424,6 +1430,7 @@
                 btn.addEventListener('click', toggleAuthModal);
             });
             wireCalendarButtons(grid);
+            wireShareButtons(grid);
 
             if (window.lucide) lucide.createIcons();
             initObserver();
@@ -1608,6 +1615,9 @@
                                     '<button class="cal-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-gold hover:text-cyber-gold text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-cal-index="' + scheduleData.indexOf(next.show) + '">' +
                                         '<i data-lucide="calendar-plus" class="w-5 h-5"></i> ADD TO CALENDAR' +
                                     '</button>' +
+                                    '<button class="share-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-teal hover:text-cyber-teal text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-share-index="' + scheduleData.indexOf(next.show) + '">' +
+                                        '<i data-lucide="share-2" class="w-5 h-5"></i> SHARE' +
+                                    '</button>' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -1616,6 +1626,7 @@
 
             el.querySelectorAll('.signin-trigger').forEach(b => b.addEventListener('click', toggleAuthModal));
             wireCalendarButtons(el);
+            wireShareButtons(el);
             if (window.lucide) lucide.createIcons();
 
             // Re-render the moment this show ends so the banner rolls forward
@@ -1651,6 +1662,172 @@
         }
 
         document.addEventListener('click', closeCalMenus);
+
+        // ================================================================
+        // SHARING
+        // Each show gets its own deep link (comedyhublive.com/#show-<id>)
+        // so a shared post lands on that show, not the top of the page.
+        // On phones this hands off to the native share sheet, which is the
+        // only route to Instagram, WhatsApp, Messages and so on. Desktop
+        // browsers mostly lack that, so they get an explicit menu instead.
+        // ================================================================
+        const SITE_URL = 'https://comedyhublive.com';
+        const DAY_PLURAL = ['Sundays','Mondays','Tuesdays','Wednesdays','Thursdays','Fridays','Saturdays'];
+        const DAY_SINGULAR = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+        function shareUrlFor(show) {
+            return SITE_URL + '/#show-' + show.id;
+        }
+
+        // "Thursdays at 5:00 PM PT" / "Thursday, October 29 at 6:00 PM PT"
+        function whenPhrase(show) {
+            if (show.freq === 'once') {
+                const start = nextOccurrence(show);
+                if (start) {
+                    const d = new Intl.DateTimeFormat('en-US', {
+                        timeZone: VENUE_TZ, weekday: 'long', month: 'long', day: 'numeric'
+                    }).format(start);
+                    return d + ' at ' + ptLabel(show);
+                }
+            }
+            if (show.freq === 'monthlyFirst') {
+                return 'the first ' + DAY_SINGULAR[show.dayIndex] + ' of every month at ' + ptLabel(show);
+            }
+            return DAY_PLURAL[show.dayIndex] + ' at ' + ptLabel(show);
+        }
+
+        function shareTextFor(show) {
+            const where = show.type === 'twitch'
+                ? 'Streaming live on Comedy Hub.'
+                : 'Live on Comedy Hub - watch on Twitch or join the Zoom audience.';
+            return show.title + ' - ' + whenPhrase(show) + '. ' + where;
+        }
+
+        function showToast(msg) {
+            let el = document.getElementById('toast');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'toast';
+                el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] px-5 py-3 bg-cyber-teal text-black font-bold rounded shadow-lg transition-opacity duration-300';
+                document.body.appendChild(el);
+            }
+            el.textContent = msg;
+            el.style.opacity = '1';
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.style.opacity = '0'; }, 2200);
+        }
+
+        function closeShareMenus() {
+            document.querySelectorAll('.share-menu').forEach(m => m.remove());
+        }
+
+        function openShareMenu(btn, show) {
+            const text = shareTextFor(show);
+            const url = shareUrlFor(show);
+            const both = encodeURIComponent(text + ' ' + url);
+
+            const targets = [
+                ['X',        'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url)],
+                ['Bluesky',  'https://bsky.app/intent/compose?text=' + both],
+                ['Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url)],
+            ];
+
+            const menu = document.createElement('div');
+            menu.className = 'share-menu absolute top-full right-0 z-40 mt-2 w-52 bg-cyber-charcoal border border-white/15 rounded shadow-xl overflow-hidden';
+            menu.innerHTML =
+                targets.map(([label, href]) =>
+                    '<a href="' + href + '" target="_blank" rel="noopener noreferrer" ' +
+                    'class="block px-4 py-3 text-sm text-gray-200 hover:bg-white/10 transition-colors">Share on ' + label + '</a>'
+                ).join('') +
+                '<button class="share-copy block w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-white/10 transition-colors border-t border-white/10">Copy link</button>';
+
+            btn.parentElement.style.position = 'relative';
+            btn.parentElement.appendChild(menu);
+
+            menu.querySelector('.share-copy').addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(text + ' ' + url);
+                    showToast('Link copied');
+                } catch (e) {
+                    showToast('Could not copy - ' + url);
+                }
+                closeShareMenus();
+            });
+        }
+
+        function wireShareButtons(root) {
+            root.querySelectorAll('.share-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const already = btn.parentElement.querySelector('.share-menu');
+                    closeCalMenus();
+                    closeShareMenus();
+                    if (already) return;
+
+                    const show = scheduleData[+btn.dataset.shareIndex];
+
+                    // Native share sheet where it exists (phones, some desktops)
+                    if (navigator.share) {
+                        try {
+                            await navigator.share({
+                                title: show.title + ' | Comedy Hub',
+                                text: shareTextFor(show),
+                                url: shareUrlFor(show),
+                            });
+                            return;
+                        } catch (err) {
+                            // AbortError just means the user dismissed the sheet.
+                            if (err && err.name === 'AbortError') return;
+                            // Anything else: fall through to the menu.
+                        }
+                    }
+                    openShareMenu(btn, show);
+                });
+            });
+        }
+
+        document.addEventListener('click', closeShareMenus);
+
+        // Arriving on a #show-... deep link: bring it into view and flash it,
+        // so a shared post visibly lands on the right show.
+        //
+        // The grid is rebuilt a couple of times just after load (auth state,
+        // then replay data), which throws away the node we highlighted. So we
+        // re-apply for a few seconds - but only scroll once, or we would yank
+        // the page back from anyone who started scrolling straight away.
+        const RING = ['ring-2', 'ring-cyber-teal', 'ring-offset-2', 'ring-offset-cyber-black'];
+
+        function highlightLinkedShow() {
+            const hash = location.hash;
+            if (!/^#show-[a-z0-9-]+$/i.test(hash)) return;
+
+            // Images below the fold keep loading after we scroll, which shifts
+            // the target out of view again - so re-scroll until things settle.
+            // The moment the visitor scrolls themselves, we stop interfering.
+            let userTookOver = false;
+            const standDown = () => { userTookOver = true; };
+            const events = ['wheel', 'touchstart', 'keydown'];
+            events.forEach(ev => window.addEventListener(ev, standDown, { passive: true }));
+
+            let tries = 0;
+            const attempt = () => {
+                const el = document.getElementById(hash.slice(1));
+                if (el) {
+                    // 'instant' matters: the page sets CSS scroll-behavior:smooth,
+                    // and a repeated smooth scrollIntoView keeps restarting its
+                    // own animation and never arrives.
+                    if (!userTookOver) el.scrollIntoView({ block: 'center', behavior: 'instant' });
+                    el.classList.add(...RING);
+                }
+                if (++tries < 6) {
+                    setTimeout(attempt, 700);
+                } else {
+                    events.forEach(ev => window.removeEventListener(ev, standDown));
+                    if (el) setTimeout(() => el.classList.remove(...RING), 2000);
+                }
+            };
+            attempt();
+        }
 
         // ================================================================
         // ONE-OFF SPECIAL EVENTS
@@ -1700,7 +1877,7 @@
                 ).join('<span class="text-orange-500/50 mx-2">&bull;</span>');
 
                 return '' +
-                '<div class="mb-12 bg-gradient-to-br from-orange-500/10 via-cyber-charcoal to-cyber-purple/20 border border-orange-500/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(249,115,22,0.18)] reveal-on-scroll is-visible">' +
+                '<div id="show-' + show.id + '" class="mb-12 scroll-mt-28 bg-gradient-to-br from-orange-500/10 via-cyber-charcoal to-cyber-purple/20 border border-orange-500/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(249,115,22,0.18)] reveal-on-scroll is-visible">' +
                     '<div class="flex flex-col md:flex-row">' +
 
                         '<div class="w-full md:w-2/5 bg-black/40 border-b md:border-b-0 md:border-r border-orange-500/30 flex items-center justify-center p-4 md:min-h-[480px]">' +
@@ -1753,6 +1930,9 @@
                                     '<button class="cal-btn px-6 py-3 bg-transparent border border-orange-500/60 hover:bg-orange-500 hover:text-black text-orange-400 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-cal-index="' + scheduleData.indexOf(show) + '">' +
                                         '<i data-lucide="calendar-plus" class="w-5 h-5"></i> ADD TO CALENDAR' +
                                     '</button>' +
+                                    '<button class="share-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-teal hover:text-cyber-teal text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-share-index="' + scheduleData.indexOf(show) + '">' +
+                                        '<i data-lucide="share-2" class="w-5 h-5"></i> SHARE' +
+                                    '</button>' +
                                     '<a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" ' +
                                        'class="px-6 py-3 bg-transparent border border-white/20 hover:border-white/50 text-gray-300 hover:text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">' +
                                         '<i data-lucide="mail" class="w-5 h-5"></i> GET THE LINEUP' +
@@ -1767,6 +1947,7 @@
 
             mount.querySelectorAll('.signin-trigger').forEach(b => b.addEventListener('click', toggleAuthModal));
             wireCalendarButtons(mount);
+            wireShareButtons(mount);
             if (window.lucide) lucide.createIcons();
         }
 
@@ -1908,6 +2089,10 @@
             renderUpNext();
             renderSpecials();
             setInterval(() => { renderUpNext(); renderSpecials(); }, 30000);
+
+            // If someone arrived from a shared #show-... link, go to it
+            highlightLinkedShow();
+            window.addEventListener('hashchange', highlightLinkedShow);
 
             // Pull in the latest Twitch replays, then re-render with them
             loadVods();
