@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09T22:32:47.202Z",
+  "updated": "2026-10-10T05:36:38.163Z",
   "channel": "comedyhub",
   "shows": {
     "chirping-bird": {
@@ -27,16 +27,16 @@
       "duration": "1:00:33"
     },
     "living-room": {
-      "url": "https://www.twitch.tv/videos/2890261304",
+      "url": "https://www.twitch.tv/videos/2896495491",
       "title": "The Living Room Show",
-      "created_at": "2026-10-03T00:03:05Z",
-      "duration": "1:06:13"
+      "created_at": "2026-10-10T00:03:56Z",
+      "duration": "1:40:58"
     },
     "ko-friday": {
-      "url": "https://www.twitch.tv/videos/2890359872",
-      "title": "KO Friday",
-      "created_at": "2026-10-03T01:59:22Z",
-      "duration": "1:00:14"
+      "url": "https://www.twitch.tv/videos/2896594582",
+      "title": "KO Comedy Friday || Get The Zoom link at Comedyhublive.com",
+      "created_at": "2026-10-10T02:02:15Z",
+      "duration": "1:17:33"
     },
     "comedy-coffee": {
       "url": "https://www.twitch.tv/videos/2891921929",
