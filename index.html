@@ -1675,8 +1675,11 @@
         const DAY_PLURAL = ['Sundays','Mondays','Tuesdays','Wednesdays','Thursdays','Fridays','Saturdays'];
         const DAY_SINGULAR = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
+        // Shares point at the per-show page under /s/, which carries that
+        // show's own Open Graph tags so the post previews with its flyer.
+        // That page bounces real visitors on to #show-<id> here.
         function shareUrlFor(show) {
-            return SITE_URL + '/#show-' + show.id;
+            return SITE_URL + '/s/' + show.id + '/';
         }
 
         // "Thursdays at 5:00 PM PT" / "Thursday, October 29 at 6:00 PM PT"
