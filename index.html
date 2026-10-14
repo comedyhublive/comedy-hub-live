@@ -1724,67 +1724,138 @@
             document.querySelectorAll('.share-menu').forEach(m => m.remove());
         }
 
+        // Small brand marks for the share menu (inline - Lucide has no brands)
+        const SHARE_ICONS = {
+            x: '<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+            facebook: '<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>',
+            bluesky: '<svg viewBox="0 0 600 530" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M135.72 44.03C202.216 93.951 273.74 195.17 300 249.49c26.262-54.316 97.782-155.54 164.28-205.46C512.26 8.009 590-19.862 590 68.825c0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.38-3.69-10.832-3.708-7.896-.017-2.936-1.193.516-3.707 7.896-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.449-163.25-81.433C10.156 217.6 0 86.536 0 68.825c0-88.687 77.742-60.816 125.72-24.795z"/></svg>',
+            threads: '<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M17.7 11.1c-.1 0-.2-.1-.3-.1-.2-3-1.8-4.7-4.6-4.7-1.7 0-3.1.7-3.9 2l1.5 1c.6-.9 1.6-1.1 2.3-1.1 1 0 1.7.3 2.1.9.3.4.5 1 .6 1.7-.8-.1-1.7-.2-2.6-.1-2.6.2-4.3 1.7-4.2 3.9.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.8.7 1.4-.1 2.5-.6 3.2-1.6.6-.7.9-1.7 1-2.8.7.4 1.2 1 1.4 1.6.4 1.1.4 2.9-1.1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5 16.6 4.4 14.6 4.4 12s.6-4.6 1.8-6.1c1.3-1.6 3.3-2.5 5.9-2.5 2.7 0 4.7.8 6 2.5.7.8 1.1 1.8 1.4 3l1.8-.5c-.4-1.4-1-2.6-1.8-3.6C17.8 2.8 15.3 1.7 12.1 1.7 8.9 1.7 6.4 2.8 4.8 4.8 3.3 6.6 2.6 9 2.5 12c.1 3 .8 5.4 2.3 7.2 1.6 2 4.1 3.1 7.3 3.1 2.8 0 4.8-.7 6.5-2.4 2.2-2.2 2.1-4.9 1.4-6.6-.5-1.1-1.3-1.9-2.3-2.2zm-4.9 4.6c-1.1.1-2.2-.4-2.3-1.4 0-.8.6-1.6 2.4-1.7h.6c.7 0 1.3.1 1.9.2-.2 2.4-1.4 2.8-2.6 2.9z"/></svg>',
+            whatsapp: '<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 9.88 9.89c0 5.45-4.44 9.88-9.89 9.88zm8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.31-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.49-8.41z"/></svg>',
+            reddit: '<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M24 11.78a2.65 2.65 0 0 0-4.5-1.86 12.9 12.9 0 0 0-6.97-2.2l1.19-5.56 3.87.82a1.88 1.88 0 1 0 .2-.94l-4.32-.92a.47.47 0 0 0-.56.36l-1.32 6.2a12.95 12.95 0 0 0-7.07 2.2 2.65 2.65 0 1 0-2.91 4.33 5.2 5.2 0 0 0-.06.8c0 4.04 4.7 7.32 10.5 7.32s10.5-3.28 10.5-7.32c0-.27-.02-.53-.06-.8A2.65 2.65 0 0 0 24 11.78zM6 13.66a1.88 1.88 0 1 1 3.76 0 1.88 1.88 0 0 1-3.76 0zm10.48 4.97c-1.28 1.28-3.73 1.38-4.45 1.38s-3.18-.1-4.45-1.38a.49.49 0 0 1 .69-.69c.8.8 2.52 1.09 3.76 1.09s2.96-.29 3.76-1.09a.49.49 0 0 1 .69.69zm-.34-3.09a1.88 1.88 0 1 1 0-3.76 1.88 1.88 0 0 1 0 3.76z"/></svg>',
+            linkedin: '<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>',
+            instagram: '<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85C2.38 3.92 3.9 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 2.7.27.27 2.69.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>',
+            mail: '<i data-lucide="mail" class="w-5 h-5"></i>',
+            link: '<i data-lucide="link" class="w-5 h-5"></i>',
+            more: '<i data-lucide="more-horizontal" class="w-5 h-5"></i>',
+        };
+
+        async function copyText(t) {
+            try { await navigator.clipboard.writeText(t); return true; }
+            catch (e) {
+                // Older browsers / insecure contexts
+                const ta = document.createElement('textarea');
+                ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
+                ta.remove(); return ok;
+            }
+        }
+
+        // Pop-up window for share intents so the visitor never leaves the site
+        function openIntent(url) {
+            const w = 620, h = 640;
+            const left = Math.max(0, (screen.width - w) / 2), top = Math.max(0, (screen.height - h) / 2);
+            const win = window.open(url, 'share', `width=${w},height=${h},left=${left},top=${top}`);
+            if (win) { try { win.opener = null; } catch (e) {} }
+            else window.open(url, '_blank', 'noopener');   // popup blocked
+        }
+
         function openShareMenu(btn, show) {
             const text = shareTextFor(show);
             const url = shareUrlFor(show);
-            const both = encodeURIComponent(text + ' ' + url);
+            const post = text + '\n' + url;
+            const enc = encodeURIComponent;
 
+            // Each target builds a post already filled in for that platform.
+            // Facebook, LinkedIn and Instagram do not accept pre-filled text,
+            // so for those the caption is copied first and the visitor pastes it.
             const targets = [
-                ['X',        'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url)],
-                ['Bluesky',  'https://bsky.app/intent/compose?text=' + both],
-                ['Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url)],
+                { key: 'x',        label: 'X',         color: 'hover:bg-white hover:text-black',
+                  go: () => openIntent('https://twitter.com/intent/tweet?text=' + enc(text) + '&url=' + enc(url)) },
+                { key: 'facebook', label: 'Facebook',  color: 'hover:bg-[#1877F2] hover:text-white',
+                  go: async () => { await copyText(post); showToast('Caption copied - paste it into your post');
+                                    openIntent('https://www.facebook.com/sharer/sharer.php?u=' + enc(url)); } },
+                { key: 'bluesky',  label: 'Bluesky',   color: 'hover:bg-[#0085FF] hover:text-white',
+                  go: () => openIntent('https://bsky.app/intent/compose?text=' + enc(post)) },
+                { key: 'threads',  label: 'Threads',   color: 'hover:bg-white hover:text-black',
+                  go: () => openIntent('https://www.threads.net/intent/post?text=' + enc(post)) },
+                { key: 'whatsapp', label: 'WhatsApp',  color: 'hover:bg-[#25D366] hover:text-white',
+                  go: () => openIntent('https://wa.me/?text=' + enc(post)) },
+                { key: 'reddit',   label: 'Reddit',    color: 'hover:bg-[#FF4500] hover:text-white',
+                  go: () => openIntent('https://www.reddit.com/submit?url=' + enc(url) + '&title=' + enc(show.title + ' - ' + whenPhrase(show))) },
+                { key: 'linkedin', label: 'LinkedIn',  color: 'hover:bg-[#0A66C2] hover:text-white',
+                  go: async () => { await copyText(post); showToast('Caption copied - paste it into your post');
+                                    openIntent('https://www.linkedin.com/sharing/share-offsite/?url=' + enc(url)); } },
+                { key: 'instagram', label: 'Instagram', color: 'hover:bg-gradient-to-tr hover:from-[#f58529] hover:via-[#dd2a7b] hover:to-[#8134af] hover:text-white',
+                  go: async () => { await copyText(post);
+                                    showToast('Caption copied - paste it into your story or post');
+                                    window.open('https://www.instagram.com/', '_blank', 'noopener'); } },
+                { key: 'mail',     label: 'Email',     color: 'hover:bg-white/20 hover:text-white',
+                  go: () => { location.href = 'mailto:?subject=' + enc(show.title + ' on Comedy Hub') + '&body=' + enc(post); } },
+                { key: 'link',     label: 'Copy',      color: 'hover:bg-cyber-teal hover:text-black',
+                  go: async () => { showToast((await copyText(post)) ? 'Post copied' : 'Could not copy - ' + url); } },
             ];
+            // Phones: one more tile for the system share sheet (Messages, Stories, etc.)
+            if (navigator.share) {
+                targets.push({ key: 'more', label: 'More', color: 'hover:bg-white/20 hover:text-white',
+                    go: async () => { try { await navigator.share({ title: show.title + ' | Comedy Hub', text, url }); } catch (e) {} } });
+            }
 
             const menu = document.createElement('div');
-            menu.className = 'share-menu absolute top-full right-0 z-40 mt-2 w-52 bg-cyber-charcoal border border-white/15 rounded shadow-xl overflow-hidden';
+            menu.className = 'share-menu absolute top-full right-0 z-50 mt-2 w-[19rem] max-w-[calc(100vw-2rem)] bg-cyber-charcoal border border-white/15 rounded-lg shadow-2xl p-4 text-left';
             menu.innerHTML =
-                targets.map(([label, href]) =>
-                    '<a href="' + href + '" target="_blank" rel="noopener noreferrer" ' +
-                    'class="block px-4 py-3 text-sm text-gray-200 hover:bg-white/10 transition-colors">Share on ' + label + '</a>'
-                ).join('') +
-                '<button class="share-copy block w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-white/10 transition-colors border-t border-white/10">Copy link</button>';
+                '<div class="flex items-center justify-between mb-3">' +
+                    '<span class="text-xs font-bold uppercase tracking-widest text-gray-400">Share this show</span>' +
+                    '<button class="share-close text-gray-500 hover:text-white" aria-label="Close"><i data-lucide="x" class="w-4 h-4"></i></button>' +
+                '</div>' +
+                // Preview of exactly what gets posted
+                '<div class="mb-4 p-3 rounded bg-black/40 border border-white/10 text-xs text-gray-300 leading-relaxed">' +
+                    '<div class="text-white font-bold mb-1">' + show.title + '</div>' +
+                    whenPhrase(show) + '.' +
+                    '<div class="mt-1 text-cyber-teal break-all">' + url.replace('https://', '') + '</div>' +
+                '</div>' +
+                '<div class="grid grid-cols-4 gap-2">' +
+                    targets.map((t, i) =>
+                        '<button data-i="' + i + '" class="share-target flex flex-col items-center gap-1 py-2 rounded text-gray-300 bg-white/5 transition-colors ' + t.color + '">' +
+                            SHARE_ICONS[t.key] +
+                            '<span class="text-[10px] font-medium">' + t.label + '</span>' +
+                        '</button>'
+                    ).join('') +
+                '</div>';
+
+            // Keep clicks inside the menu from closing it
+            menu.addEventListener('click', e => e.stopPropagation());
+            menu.querySelector('.share-close').addEventListener('click', closeShareMenus);
+            menu.querySelectorAll('.share-target').forEach(b => {
+                b.addEventListener('click', async () => {
+                    await targets[+b.dataset.i].go();
+                    closeShareMenus();
+                });
+            });
 
             btn.parentElement.style.position = 'relative';
             btn.parentElement.appendChild(menu);
+            if (window.lucide) lucide.createIcons();
 
-            menu.querySelector('.share-copy').addEventListener('click', async () => {
-                try {
-                    await navigator.clipboard.writeText(text + ' ' + url);
-                    showToast('Link copied');
-                } catch (e) {
-                    showToast('Could not copy - ' + url);
-                }
-                closeShareMenus();
-            });
+            // Don't let the menu hang off the bottom of the screen
+            const r = menu.getBoundingClientRect();
+            if (r.bottom > window.innerHeight - 8) {
+                menu.classList.remove('top-full', 'mt-2');
+                menu.classList.add('bottom-full', 'mb-2');
+            }
         }
 
         function wireShareButtons(root) {
             root.querySelectorAll('.share-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
+                btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const already = btn.parentElement.querySelector('.share-menu');
                     closeCalMenus();
                     closeShareMenus();
                     if (already) return;
-
-                    const show = scheduleData[+btn.dataset.shareIndex];
-
-                    // Native share sheet where it exists (phones, some desktops)
-                    if (navigator.share) {
-                        try {
-                            await navigator.share({
-                                title: show.title + ' | Comedy Hub',
-                                text: shareTextFor(show),
-                                url: shareUrlFor(show),
-                            });
-                            return;
-                        } catch (err) {
-                            // AbortError just means the user dismissed the sheet.
-                            if (err && err.name === 'AbortError') return;
-                            // Anything else: fall through to the menu.
-                        }
-                    }
-                    openShareMenu(btn, show);
+                    // Always show our own menu, so the visitor picks the
+                    // platform and gets a ready-made post for it.
+                    openShareMenu(btn, scheduleData[+btn.dataset.shareIndex]);
                 });
             });
         }
