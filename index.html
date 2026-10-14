@@ -489,7 +489,7 @@
             <div id="special-events"></div>
 
             <!-- Highlighted Special Event -->
-            <div class="mb-12 bg-gradient-to-r from-cyber-purple/10 to-cyber-teal/10 border border-cyber-teal/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.15)] reveal-on-scroll">
+            <div id="show-sammy" class="mb-12 scroll-mt-28 bg-gradient-to-r from-cyber-purple/10 to-cyber-teal/10 border border-cyber-teal/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.15)] reveal-on-scroll">
                 <div class="flex flex-col md:flex-row">
                     <!-- Flyer Image -->
                     <div class="w-full md:w-2/5 border-b md:border-b-0 md:border-r border-white/10">
@@ -528,13 +528,16 @@
                             </div>
                             
                             <!-- Action Buttons -->
-                            <div class="flex flex-col sm:flex-row gap-4 mt-4">
-                                <a href="https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09&mc_cid=825ffdba58&mc_eid=1c3738da46#success" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                            <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 mt-4">
+                                <a href="https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09&mc_cid=825ffdba58&mc_eid=1c3738da46#success" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">
                                     <i data-lucide="video" class="w-5 h-5"></i> JOIN ZOOM AUDIENCE
                                 </a>
-                                <a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(145,70,255,0.3)]">
+                                <a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(145,70,255,0.3)]">
                                     <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> WATCH ON TWITCH
                                 </a>
+                                <button class="share-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-teal hover:text-cyber-teal text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-share-id="sammy">
+                                    <i data-lucide="share-2" class="w-5 h-5"></i> SHARE
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -747,6 +750,21 @@
                 type: 'zoom'
             },
             {
+                // ---- SAMMY DOES AN HOUR - update `date` for each new show ----
+                day: 'FRI', dayIndex: 5, hour: 19, minute: 0, durationMins: 90,
+                freq: 'once', date: '2026-10-16', special: 'static',
+                image: 'Sammy Hour Generic.png',
+                id: 'sammy',
+                title: 'Sammy Does An Hour w/ Sammy Obeid',
+                showSocials: [],
+                hosts: [
+                    { name: 'Sammy Obeid', url: 'https://www.instagram.com/sammyobeid/' }
+                ],
+                desc: 'Sammy tries out all of his new material before taking it on the road. Catch the fresh bits first on Twitch or join the interactive Zoom audience!',
+                zoomLink: 'https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09',
+                type: 'zoom'
+            },
+            {
                 day: 'MON', dayIndex: 1, hour: 17, minute: 0, durationMins: 90, freq: 'weekly',
                 image: 'show-chirping-bird.jpg',
                 id: 'chirping-bird',
@@ -761,7 +779,7 @@
             },
             {
                 day: 'TUE', dayIndex: 2, hour: 18, minute: 0, durationMins: 60, freq: 'weekly',
-                image: 'show-kapfer.png',
+                image: 'show-kapfer.jpg',
                 id: 'kapfer',
                 title: "Anthony Kapfer's Digital Something Show",
                 showSocials: [],
@@ -1684,14 +1702,12 @@
 
         // "Thursdays at 5:00 PM PT" / "Thursday, October 29 at 6:00 PM PT"
         function whenPhrase(show) {
-            if (show.freq === 'once') {
-                const start = nextOccurrence(show);
-                if (start) {
-                    const d = new Intl.DateTimeFormat('en-US', {
-                        timeZone: VENUE_TZ, weekday: 'long', month: 'long', day: 'numeric'
-                    }).format(start);
-                    return d + ' at ' + ptLabel(show);
-                }
+            if (show.freq === 'once' && show.date) {
+                const [y, m, d] = show.date.split('-').map(Number);
+                const day = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric'
+                }).format(new Date(Date.UTC(y, m - 1, d, 12)));
+                return day + ' at ' + ptLabel(show);
             }
             if (show.freq === 'monthlyFirst') {
                 return 'the first ' + DAY_SINGULAR[show.dayIndex] + ' of every month at ' + ptLabel(show);
@@ -1855,7 +1871,10 @@
                     if (already) return;
                     // Always show our own menu, so the visitor picks the
                     // platform and gets a ready-made post for it.
-                    openShareMenu(btn, scheduleData[+btn.dataset.shareIndex]);
+                    const show = btn.dataset.shareId
+                        ? scheduleData.find(x => x.id === btn.dataset.shareId)
+                        : scheduleData[+btn.dataset.shareIndex];
+                    if (show) openShareMenu(btn, show);
                 });
             });
         }
@@ -1916,7 +1935,7 @@
 
             const now = new Date();
             const upcoming = scheduleData
-                .filter(show => show.special)
+                .filter(show => show.special === true)
                 .map(show => ({ show, start: nextOccurrence(show, now) }))
                 .filter(x => x.start)
                 .sort((a, b) => a.start - b.start);
@@ -2163,6 +2182,10 @@
             renderUpNext();
             renderSpecials();
             setInterval(() => { renderUpNext(); renderSpecials(); }, 30000);
+
+            // Hand-built cards (Sammy) have their share buttons in the HTML
+            const sammyCard = document.getElementById('show-sammy');
+            if (sammyCard) wireShareButtons(sammyCard);
 
             // If someone arrived from a shared #show-... link, go to it
             highlightLinkedShow();
