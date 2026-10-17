@@ -520,7 +520,7 @@
                             <div class="flex flex-col gap-2 mb-6">
                                 <div class="flex items-center gap-2 text-white font-bold">
                                     <i data-lucide="calendar" class="w-5 h-5 text-cyber-gold"></i>
-                                    Friday, October 16 &middot; 7:00 PM PT
+                                    New Date Will Be Announced Soon
                                 </div>
                                 <p class="text-gray-400 text-sm max-w-lg">
                                     Sammy tries out all of his new material before taking it on the road. Catch the fresh bits first on Twitch or join the interactive Zoom audience!
@@ -541,6 +541,22 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- Last show replay. Swap the link, flyer, title and date after
+                     each new Sammy show. data-expires = air date + 60 days,
+                     when Twitch deletes the broadcast; the strip hides itself then. -->
+                <div class="replay-strip border-t border-white/10 bg-black/30 px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-4" data-expires="2026-12-15">
+                    <a href="https://www.twitch.tv/videos/2902852763" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 self-center sm:self-auto">
+                        <img src="replay-sammy-executes-the-hour.jpg" alt="Sammy Publicly Executes The Hour flyer" width="80" height="80" loading="lazy" decoding="async" class="w-20 h-20 rounded border border-white/15 object-cover hover:opacity-90 transition-opacity">
+                    </a>
+                    <div class="flex-grow min-w-0 text-center sm:text-left">
+                        <div class="text-[11px] font-display font-bold uppercase tracking-widest text-gray-500 mb-1">Missed the last one?</div>
+                        <div class="text-white font-bold leading-tight">Sammy Publicly Executes The Hour</div>
+                        <div class="text-gray-400 text-xs mt-1">Friday, October 16 &middot; 1:57:16</div>
+                    </div>
+                    <a href="https://www.twitch.tv/videos/2902852763" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 px-5 py-2.5 rounded font-medium flex items-center justify-center gap-2 transition-colors whitespace-nowrap border border-cyber-purple/60 text-cyber-purple hover:bg-cyber-purple hover:text-white hover:border-cyber-purple">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="w-4 h-4 fill-current flex-shrink-0"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> Watch Replay
+                    </a>
                 </div>
             </div>
 
@@ -750,9 +766,12 @@
                 type: 'zoom'
             },
             {
-                // ---- SAMMY DOES AN HOUR - update `date` for each new show ----
+                // ---- SAMMY DOES AN HOUR ----
+                // No date yet: freq 'tba'. When one is set, change to
+                //   freq: 'once', date: 'YYYY-MM-DD'   (and day/dayIndex/hour)
+                // and update the date line on Sammy's card in the HTML above.
                 day: 'FRI', dayIndex: 5, hour: 19, minute: 0, durationMins: 90,
-                freq: 'once', date: '2026-10-16', special: 'static',
+                freq: 'tba', special: 'static',
                 image: 'Sammy Hour Generic.png',
                 id: 'sammy',
                 title: 'Sammy Does An Hour w/ Sammy Obeid',
@@ -840,7 +859,7 @@
                     { name: '& Desirée Walsh', url: 'https://www.instagram.com/desiree.lisa.walsh_/' }
                 ],
                 desc: 'Join the party. (After Party is Zoom Only)',
-                zoomLink: 'https://us02web.zoom.us/j/81945742580?pwd=lPcZHuUpuuKabrb3UTeNNb7ymE9knn.1',
+                zoomLink: 'https://bit.ly/KOcmdy',
                 type: 'zoom'
             },
             {
@@ -882,7 +901,7 @@
                     { name: '& Katie Farrell', url: 'https://www.instagram.com/katieisaproblem/' }
                 ],
                 desc: 'Closing the weekend with a knockout lineup.',
-                zoomLink: 'https://us02web.zoom.us/j/81945742580?pwd=lPcZHuUpuuKabrb3UTeNNb7ymE9knn.1',
+                zoomLink: 'https://bit.ly/KOcmdySunday',
                 type: 'zoom'
             }
         ];
@@ -932,6 +951,9 @@
         // A show already underway still counts as "next" until it ends.
         function nextOccurrence(show, from) {
             from = from || new Date();
+
+            // Date not announced yet - there is no next time to compute.
+            if (show.freq === 'tba') return null;
 
             // A one-off special happens once, on `date` (YYYY-MM-DD, Pacific).
             // Once it has finished there is no next time, so it returns null
@@ -1702,6 +1724,7 @@
 
         // "Thursdays at 5:00 PM PT" / "Thursday, October 29 at 6:00 PM PT"
         function whenPhrase(show) {
+            if (show.freq === 'tba') return 'New date coming soon';
             if (show.freq === 'once' && show.date) {
                 const [y, m, d] = show.date.split('-').map(Number);
                 const day = new Intl.DateTimeFormat('en-US', {
@@ -2182,6 +2205,11 @@
             renderUpNext();
             renderSpecials();
             setInterval(() => { renderUpNext(); renderSpecials(); }, 30000);
+
+            // Replay strips hide themselves once the broadcast has expired on Twitch
+            document.querySelectorAll('.replay-strip[data-expires]').forEach(el => {
+                if (Date.now() > new Date(el.dataset.expires + 'T23:59:59Z').getTime()) el.remove();
+            });
 
             // Hand-built cards (Sammy) have their share buttons in the HTML
             const sammyCard = document.getElementById('show-sammy');
