@@ -60,6 +60,7 @@ function ptLabel(show) {
 
 /** Mirrors whenPhrase() in index.html. */
 function whenPhrase(show) {
+  if (show.freq === 'tba') return 'New date coming soon';
   if (show.freq === 'once' && show.date) {
     const [y, m, d] = show.date.split('-').map(Number);
     const when = new Date(Date.UTC(y, m - 1, d, 12));
