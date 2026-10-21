@@ -214,7 +214,16 @@
                 <i data-lucide="x"></i>
             </button>
             <h3 id="auth-title" class="text-2xl font-display font-bold text-white mb-2">Access The Stage</h3>
-            <p class="text-gray-400 mb-6 text-sm">Sign in to unlock exclusive Zoom audience links.</p>
+            <p class="text-gray-400 mb-5 text-sm">Sign in to unlock exclusive Zoom audience links.</p>
+
+            <!-- KO Comedy email list opt-in (Mailchimp). Unchecked by default. -->
+            <label for="ko-optin" class="flex items-start gap-3 mb-5 p-3 rounded border border-white/10 bg-black/30 cursor-pointer hover:border-cyber-teal/50 transition-colors">
+                <input type="checkbox" id="ko-optin" class="mt-0.5 w-4 h-4 accent-[#00F0FF] flex-shrink-0">
+                <span class="text-sm text-gray-300 leading-snug">
+                    <span class="text-white font-bold">Email me show links &amp; updates</span><br>
+                    Join the free KO Comedy email list. Unsubscribe anytime.
+                </span>
+            </label>
             
             <!-- Google Sign In -->
             <button id="google-signin-btn" class="w-full bg-white text-black font-bold py-3 rounded hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 mb-4">
@@ -1252,16 +1261,104 @@
         }
 
         // Database Helper
+        // ----------------------------------------------------------------
+        // KO COMEDY EMAIL LIST (Mailchimp)
+        // These values come from KO Comedy's public embedded signup form -
+        // they identify the list, they are not secrets. Never put a Mailchimp
+        // API key in this file. Mailchimp's JSONP endpoint lets a static page
+        // subscribe someone without a server.
+        // ----------------------------------------------------------------
+        const MAILCHIMP = {
+            url: 'https://sammyko.us3.list-manage.com/subscribe/post-json',
+            u:   '0f5aa1259085a37c9bb472de1',
+            id:  '470669ca70',
+            fid: '007cb5e3f0',
+        };
+
+        // Resolves to { ok, pending, already, msg }. Never throws.
+        function subscribeToKoList(email, firstName, lastName) {
+            return new Promise((resolve) => {
+                const cb = 'mcCb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+                const params = new URLSearchParams({
+                    u: MAILCHIMP.u, id: MAILCHIMP.id, f_id: MAILCHIMP.fid,
+                    EMAIL: email, c: cb,
+                });
+                if (firstName) params.set('FNAME', firstName);
+                if (lastName)  params.set('LNAME', lastName);
+                params.set('b_' + MAILCHIMP.u + '_' + MAILCHIMP.id, '');   // Mailchimp's bot trap - must be empty
+
+                const script = document.createElement('script');
+                let done = false;
+                const finish = (out) => {
+                    if (done) return;
+                    done = true;
+                    delete window[cb];
+                    script.remove();
+                    resolve(out);
+                };
+
+                window[cb] = (resp) => {
+                    const msg = String((resp && resp.msg) || '').replace(/^\d+\s*-\s*/, '');
+                    if (resp && resp.result === 'success') {
+                        // With double opt-in on, Mailchimp's message asks them to confirm by email.
+                        finish({ ok: true, pending: /confirm/i.test(msg), msg });
+                    } else if (/already subscribed/i.test(msg)) {
+                        finish({ ok: true, already: true, msg });
+                    } else {
+                        finish({ ok: false, msg });
+                    }
+                };
+                script.onerror = () => finish({ ok: false, msg: 'Could not reach the email list.' });
+                setTimeout(() => finish({ ok: false, msg: 'The email list did not respond.' }), 12000);
+
+                script.src = MAILCHIMP.url + '?' + params.toString();
+                document.body.appendChild(script);
+            });
+        }
+
+        // Called after any successful sign-in. Only acts if the box was ticked.
+        async function handleKoOptIn(user) {
+            const box = document.getElementById('ko-optin');
+            if (!box || !box.checked || !user || !user.email) return;
+
+            const parts = (user.displayName || '').trim().split(/\s+/);
+            const res = await subscribeToKoList(user.email, parts[0] || '', parts.slice(1).join(' '));
+
+            if (res.ok) {
+                box.checked = false;
+                showToast(res.pending
+                    ? 'Almost done - check your inbox to confirm your KO Comedy subscription'
+                    : res.already
+                        ? "You're already on the KO Comedy email list"
+                        : "You're on the KO Comedy email list!");
+            } else {
+                console.warn('KO list signup failed:', res.msg);
+                showToast("Couldn't add you to the email list - you can join at KOComedy.com");
+            }
+
+            try {
+                await setDoc(doc(db, "users", user.uid), {
+                    marketingOptIn: res.ok,
+                    marketingOptInAt: serverTimestamp(),
+                }, { merge: true });
+            } catch (e) {
+                console.error("Error saving opt-in: ", e);
+            }
+        }
+
         async function saveUserToDb(user) {
             try {
                 const userRef = doc(db, "users", user.uid);
                 // Check if user exists first to avoid overwriting existing data if they just log in
                 const docSnap = await getDoc(userRef);
-                
+
                 if (!docSnap.exists()) {
+                    // Records what the person actually chose. This used to be
+                    // hard-coded true for everyone, whether they agreed or not.
+                    const box = document.getElementById('ko-optin');
                     await setDoc(userRef, {
                         email: user.email,
-                        marketingOptIn: true, 
+                        marketingOptIn: !!(box && box.checked),
                         createdAt: serverTimestamp(),
                         lastLogin: serverTimestamp(),
                         uid: user.uid
@@ -1295,6 +1392,7 @@
                     await saveUserToDb(userCredential.user);
                 }
                 toggleAuthModal();
+                handleKoOptIn(userCredential.user);
             } catch (error) {
                 let message = error.message;
                 if (error.code === 'auth/email-already-in-use') message = "That email is already registered.";
@@ -1312,6 +1410,7 @@
                 const result = await signInWithPopup(auth, provider);
                 await saveUserToDb(result.user);
                 toggleAuthModal();
+                handleKoOptIn(result.user);
             } catch (error) {
                 errorMsg.textContent = error.message;
                 errorMsg.classList.remove('hidden');
