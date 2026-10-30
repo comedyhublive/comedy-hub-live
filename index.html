@@ -538,9 +538,7 @@
                             
                             <!-- Action Buttons -->
                             <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 mt-4">
-                                <a href="https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09&mc_cid=825ffdba58&mc_eid=1c3738da46#success" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">
-                                    <i data-lucide="video" class="w-5 h-5"></i> JOIN ZOOM AUDIENCE
-                                </a>
+                                <span id="sammy-zoom-slot" class="contents"></span>
                                 <a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(145,70,255,0.3)]">
                                     <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> WATCH ON TWITCH
                                 </a>
@@ -757,7 +755,9 @@
 
         const scheduleData = [
             {
-                // ---- ONE-OFF HALLOWEEN SPECIAL - safe to delete after 2026-10-29 ----
+                // ---- ONE-OFF HALLOWEEN SPECIAL (aired 2026-10-29) ----
+                // After it airs the card switches to replay mode and stays
+                // until replay.expires (Twitch deletes broadcasts after 60 days).
                 day: 'THU', dayIndex: 4, hour: 18, minute: 0, durationMins: 120,
                 freq: 'once', date: '2026-10-29', special: true,
                 image: 'show-halloween-bash.jpg',
@@ -771,8 +771,13 @@
                     { name: 'Musical Guest Xrayxeroxx', url: 'https://www.instagram.com/xrayxeroxx/' }
                 ],
                 desc: 'Comedians and surprise call-ins all night. Lineups and links are posted here and sent to the KO Comedy email list.',
-                zoomLink: 'https://us02web.zoom.us/j/85359591555?pwd=d38lh1y32uz0w5vNawzI0bALWyOoAZ.1',
-                type: 'zoom'
+                replay: {
+                    url: 'https://www.twitch.tv/videos/2914450529',
+                    duration: '2:01:25',
+                    expires: '2026-12-27',
+                    desc: 'Two hours of Halloween comedy, live music from Anthony Kapfer and Xrayxeroxx, and surprise call-ins. Missed it? The whole bash is on Twitch.'
+                },
+                type: 'twitch'
             },
             {
                 // ---- SAMMY DOES AN HOUR ----
@@ -789,7 +794,6 @@
                     { name: 'Sammy Obeid', url: 'https://www.instagram.com/sammyobeid/' }
                 ],
                 desc: 'Sammy tries out all of his new material before taking it on the road. Catch the fresh bits first on Twitch or join the interactive Zoom audience!',
-                zoomLink: 'https://us02web.zoom.us/j/82368620633?pwd=S1NHclhiTThWdU8vR0lOTmZwenZqUT09',
                 type: 'zoom'
             },
             {
@@ -802,7 +806,6 @@
                     { name: 'Hosted By Mark Anthony', url: 'https://www.instagram.com/markanthonycomedy/' }
                 ],
                 desc: 'Start your week with high-altitude laughs.',
-                zoomLink: 'https://bit.ly/CBCmdy',
                 type: 'zoom'
             },
             {
@@ -815,7 +818,6 @@
                     { name: 'Hosted by Anthony Kapfer', url: 'https://www.instagram.com/anthonykapfer/' }
                 ],
                 desc: 'Digital absurdity and multimedia comedy.',
-                zoomLink: 'https://bit.ly/DSScmdy',
                 type: 'zoom'
             },
             {
@@ -828,7 +830,6 @@
                 ],
                 hosts: [],
                 desc: 'Listener-supported, descriptive video for the visually and Facebook impaired.',
-                zoomLink: 'https://us02web.zoom.us/j/6483315317',
                 type: 'zoom'
             },
             {
@@ -841,7 +842,6 @@
                     { name: 'Hosted by Jackie Monohan', url: 'https://www.instagram.com/jackiemonahan/' }
                 ],
                 desc: 'Comedy. Chaos. Out of this world.',
-                zoomLink: 'https://bit.ly/JackieMo',
                 type: 'zoom'
             },
             {
@@ -854,7 +854,6 @@
                     { name: 'Hosted by Aaron Kominos-Smith', url: 'https://www.instagram.com/funnyaaron/' }
                 ],
                 desc: 'Intimate sets from the best living rooms in the world.',
-                zoomLink: 'https://bit.ly/TLRScmdy',
                 type: 'zoom'
             },
             {
@@ -868,7 +867,6 @@
                     { name: '& Desirée Walsh', url: 'https://www.instagram.com/desiree.lisa.walsh_/' }
                 ],
                 desc: 'Join the party. (After Party is Zoom Only)',
-                zoomLink: 'https://us02web.zoom.us/j/81945742580?pwd=lPcZHuUpuuKabrb3UTeNNb7ymE9knn.1',
                 type: 'zoom'
             },
             {
@@ -883,7 +881,6 @@
                     { name: 'Hosted by New Blerd Order', url: 'https://www.instagram.com/newblerdorder/' }
                 ],
                 desc: 'Early risers get the best bits. Twitch Exclusive.',
-                zoomLink: null,
                 type: 'twitch'
             },
             {
@@ -896,7 +893,6 @@
                     { name: 'Hosted by Kelly Zemnickis', url: 'https://www.instagram.com/thelatvianfoodie/' }
                 ],
                 desc: 'Wake up and laugh. Monthly special.',
-                zoomLink: 'https://bit.ly/CmdyCoffee',
                 type: 'zoom'
             },
             {
@@ -910,7 +906,6 @@
                     { name: '& Katie Farrell', url: 'https://www.instagram.com/katieisaproblem/' }
                 ],
                 desc: 'Closing the weekend with a knockout lineup.',
-                zoomLink: 'https://bit.ly/KOcmdySunday',
                 type: 'zoom'
             }
         ];
@@ -1055,14 +1050,17 @@
             const hosts = (show.hosts || []).map(h => h.name).join(', ');
             const where = show.type === 'twitch'
                 ? 'Watch on Twitch: https://twitch.tv/comedyhub'
-                : 'Zoom audience: ' + (show.zoomLink || '') + '\nAlso streaming on Twitch: https://twitch.tv/comedyhub';
+                : (zoomLinkFor(show)
+                    ? 'Zoom audience: ' + zoomLinkFor(show)
+                    : 'Zoom audience: sign in at https://comedyhublive.com for the link')
+                  + '\nAlso streaming on Twitch: https://twitch.tv/comedyhub';
             return [show.desc, hosts, '', where, '', 'Comedy Hub - https://comedyhublive.com'].join('\n');
         }
 
         function showLocation(show) {
             return show.type === 'twitch'
                 ? 'https://twitch.tv/comedyhub'
-                : (show.zoomLink || 'https://comedyhublive.com');
+                : (zoomLinkFor(show) || 'https://comedyhublive.com');
         }
 
         function googleCalUrl(show) {
@@ -1182,6 +1180,87 @@
             setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
+        // ================================================================
+        // ZOOM LINKS
+        // Deliberately NOT in this file. They live in Firestore at
+        // private/zoomLinks - one field per show id (e.g. "ko-friday") - and
+        // the security rules only let signed-in members read that record.
+        // To change a link, edit that field in the Firebase console; no
+        // upload needed. Never paste a Zoom link back into this file: the
+        // repo is public and a GitHub Action fails the build if one appears.
+        // ================================================================
+        let zoomLinks = {};
+        let zoomLinksState = 'signed-out';   // 'loading' | 'ready' | 'error'
+
+        function zoomLinkFor(show) {
+            return (show && zoomLinks[show.id]) || '';
+        }
+
+        async function loadZoomLinks(user) {
+            if (!user) {
+                zoomLinks = {};
+                zoomLinksState = 'signed-out';
+                return;
+            }
+            zoomLinksState = 'loading';
+            try {
+                const snap = await getDoc(doc(db, 'private', 'zoomLinks'));
+                zoomLinks = snap.exists() ? snap.data() : {};
+                zoomLinksState = 'ready';
+            } catch (e) {
+                console.warn('Zoom links unavailable:', e.code || e.message);
+                zoomLinks = {};
+                zoomLinksState = 'error';
+            }
+        }
+
+        // The Join Zoom control for a show. 'row' = schedule rows, 'big' = feature cards.
+        function zoomButton(show, variant) {
+            const row = variant === 'row';
+            const icon = row ? 'w-4 h-4' : 'w-5 h-5';
+            const quiet = (row
+                ? 'w-full md:w-auto px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-300 rounded font-medium'
+                : 'px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 font-bold rounded')
+                + ' flex items-center justify-center gap-2 transition-colors whitespace-nowrap';
+
+            if (!currentUser) {
+                return '<button class="signin-trigger ' + quiet + '">' +
+                       '<i data-lucide="lock" class="' + icon + '"></i> ' +
+                       (row ? 'Sign In for Zoom Link' : 'SIGN IN FOR ZOOM') + '</button>';
+            }
+            if (zoomLinksState === 'loading') {
+                return '<span class="' + quiet + ' opacity-60 cursor-wait">' +
+                       '<i data-lucide="loader" class="' + icon + ' animate-spin"></i> Loading Zoom link...</span>';
+            }
+            const link = zoomLinkFor(show);
+            if (link) {
+                return '<a href="' + link + '" target="_blank" rel="noopener noreferrer" class="' +
+                       (row ? 'w-full md:w-auto ' : '') +
+                       'px-6 py-3 bg-cyber-teal hover:bg-white text-black hover:text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">' +
+                       '<i data-lucide="video" class="' + icon + '"></i> JOIN ZOOM AUDIENCE</a>';
+            }
+            // Signed in but no link (not set yet, or Firestore unreachable)
+            return '<a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" class="' + quiet + '">' +
+                   '<i data-lucide="mail" class="' + icon + '"></i> RSVP at KOComedy.com</a>';
+        }
+
+        // Sammy's card is hand-built HTML, so its Zoom button is filled in here
+        function renderSammyZoom() {
+            const slot = document.getElementById('sammy-zoom-slot');
+            const sammy = scheduleData.find(s => s.id === 'sammy');
+            if (!slot || !sammy) return;
+            slot.innerHTML = zoomButton(sammy, 'big');
+            slot.querySelectorAll('.signin-trigger').forEach(b => b.addEventListener('click', toggleAuthModal));
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function renderAllZoomButtons() {
+            renderSchedule();
+            renderUpNext();
+            renderSpecials();
+            renderSammyZoom();
+        }
+
         // UI Functions
         function toggleAuthModal() {
             const modal = document.getElementById('auth-modal');
@@ -1258,6 +1337,7 @@
             renderSchedule();
             renderUpNext();
             renderSpecials();
+            renderSammyZoom();
         }
 
         // Database Helper
@@ -1486,16 +1566,8 @@
                 let actionBtn = '';
                 if (show.type === 'twitch') {
                     actionBtn = twitchBtn;
-                } else if (currentUser) {
-                    actionBtn = `
-                        <a href="${show.zoomLink}" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto px-6 py-3 bg-cyber-teal hover:bg-white text-black hover:text-black font-bold rounded flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.3)] whitespace-nowrap">
-                            <i data-lucide="video" class="w-4 h-4"></i> JOIN ZOOM AUDIENCE
-                        </a>` + twitchBtn;
                 } else {
-                    actionBtn = `
-                        <button class="signin-trigger w-full md:w-auto px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-300 rounded font-medium flex items-center justify-center gap-2 transition-colors whitespace-nowrap">
-                            <i data-lucide="lock" class="w-4 h-4"></i> Sign In for Zoom Link
-                        </button>` + twitchBtn;
+                    actionBtn = zoomButton(show, 'row') + twitchBtn;
                 }
 
                 // --- Generate Inline Social Buttons for Show Title ---
@@ -1722,9 +1794,7 @@
 
             const action = next.show.type === 'twitch'
                 ? upNextTwitch
-                : (currentUser
-                    ? '<a href="' + next.show.zoomLink + '" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">JOIN ZOOM AUDIENCE</a>' + upNextTwitch
-                    : '<button class="signin-trigger px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap"><i data-lucide="lock" class="w-5 h-5"></i> SIGN IN FOR ZOOM</button>' + upNextTwitch);
+                : zoomButton(next.show, 'big') + upNextTwitch;
 
             const hostLine = (next.show.hosts || []).map(h => h.name).join(' ');
 
@@ -1838,6 +1908,9 @@
         }
 
         function shareTextFor(show) {
+            if (inReplayWindow(show, new Date())) {
+                return show.title + ' - catch the replay on Twitch.';
+            }
             const where = show.type === 'twitch'
                 ? 'Streaming live on Comedy Hub.'
                 : 'Live on Comedy Hub - watch on Twitch or join the Zoom audience.';
@@ -2051,6 +2124,21 @@
         // passed nextOccurrence() returns null and the card removes itself,
         // so nothing goes stale if nobody edits the page.
         // ================================================================
+        // The air time of a one-off, whether or not it has happened yet
+        function onceInstant(show) {
+            if (show.freq !== 'once' || !show.date) return null;
+            const [y, m, d] = show.date.split('-').map(Number);
+            return pacificWallTimeToInstant(y, m - 1, d, show.hour, show.minute);
+        }
+
+        // Aired, and its Twitch replay hasn't expired yet
+        function inReplayWindow(show, now) {
+            if (!show.replay || !show.replay.expires) return false;
+            const aired = onceInstant(show);
+            if (!aired || now < new Date(aired.getTime() + show.durationMins * 60000)) return false;
+            return now.getTime() <= new Date(show.replay.expires + 'T23:59:59Z').getTime();
+        }
+
         function renderSpecials() {
             const mount = document.getElementById('special-events');
             if (!mount) return;
@@ -2058,13 +2146,19 @@
             const now = new Date();
             const upcoming = scheduleData
                 .filter(show => show.special === true)
-                .map(show => ({ show, start: nextOccurrence(show, now) }))
-                .filter(x => x.start)
-                .sort((a, b) => a.start - b.start);
+                .map(show => {
+                    const next = nextOccurrence(show, now);
+                    if (next) return { show, start: next, ended: false };
+                    if (inReplayWindow(show, now)) return { show, start: onceInstant(show), ended: true };
+                    return null;
+                })
+                .filter(Boolean)
+                // upcoming specials first, then replays of ones that have aired
+                .sort((a, b) => (a.ended - b.ended) || (a.start - b.start));
 
             if (!upcoming.length) { mount.innerHTML = ''; return; }
 
-            mount.innerHTML = upcoming.map(({ show, start }) => {
+            mount.innerHTML = upcoming.map(({ show, start, ended }) => {
                 const started = now >= start;
 
                 // The venue clock, plus Eastern since the flyers quote both.
@@ -2079,7 +2173,9 @@
                 const localLine = viewerIsPacific() ? ''
                     : '<span class="text-gray-400 font-normal text-sm">(' + localLabel(start, true) + ' your time)</span>';
 
-                const status = started
+                const status = ended
+                    ? 'REPLAY NOW ON TWITCH'
+                    : started
                     ? '<span class="inline-flex items-center gap-2"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-400"></span></span>HAPPENING NOW</span>'
                     : 'STARTS IN ' + countdownText(start - now).toUpperCase();
 
@@ -2120,24 +2216,29 @@
                                 '<div class="flex flex-col gap-3 mb-6">' +
                                     '<div class="flex items-start gap-2 text-white font-bold">' +
                                         '<i data-lucide="calendar" class="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5"></i>' +
-                                        '<span>' + dateLine + ' &middot; ' + ptTime + ' / ' + etTime + ' ' + localLine + '</span>' +
+                                        (ended
+                                            ? '<span>Aired ' + dateLine + (show.replay.duration ? ' &middot; ' + show.replay.duration : '') + '</span>'
+                                            : '<span>' + dateLine + ' &middot; ' + ptTime + ' / ' + etTime + ' ' + localLine + '</span>') +
                                     '</div>' +
                                     '<div class="flex items-start gap-2 text-gray-300 text-sm">' +
                                         '<i data-lucide="users" class="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5"></i>' +
                                         '<span class="leading-relaxed">' + lineup + '</span>' +
                                     '</div>' +
-                                    '<p class="text-gray-400 text-sm max-w-lg">' + show.desc + '</p>' +
+                                    '<p class="text-gray-400 text-sm max-w-lg">' + (ended && show.replay.desc ? show.replay.desc : show.desc) + '</p>' +
                                 '</div>' +
 
-                                '<div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">' +
-                                    (show.zoomLink
-                                        ? (currentUser
-                                            ? '<a href="' + show.zoomLink + '" target="_blank" rel="noopener noreferrer" ' +
-                                              'class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">' +
-                                              '<i data-lucide="video" class="w-5 h-5"></i> JOIN ZOOM AUDIENCE</a>'
-                                            : '<button class="signin-trigger px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">' +
-                                              '<i data-lucide="lock" class="w-5 h-5"></i> SIGN IN FOR ZOOM</button>')
-                                        : '') +
+                                (ended
+                                ? '<div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">' +
+                                    '<a href="' + show.replay.url + '" target="_blank" rel="noopener noreferrer" ' +
+                                       'class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(145,70,255,0.3)]">' +
+                                        TWITCH_MARK + ' WATCH THE REPLAY' +
+                                    '</a>' +
+                                    '<button class="share-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-teal hover:text-cyber-teal text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-share-index="' + scheduleData.indexOf(show) + '">' +
+                                        '<i data-lucide="share-2" class="w-5 h-5"></i> SHARE' +
+                                    '</button>' +
+                                  '</div>'
+                                : '<div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">' +
+                                    (show.type === 'zoom' ? zoomButton(show, 'big') : '') +
                                     '<a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" ' +
                                        'class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(145,70,255,0.3)]">' +
                                         TWITCH_MARK + ' WATCH ON TWITCH' +
@@ -2152,7 +2253,7 @@
                                        'class="px-6 py-3 bg-transparent border border-white/20 hover:border-white/50 text-gray-300 hover:text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">' +
                                         '<i data-lucide="mail" class="w-5 h-5"></i> GET THE LINEUP' +
                                     '</a>' +
-                                '</div>' +
+                                '</div>') +
 
                             '</div>' +
                         '</div>' +
@@ -2303,6 +2404,7 @@
             renderSchedule();
             renderUpNext();
             renderSpecials();
+            renderSammyZoom();
             setInterval(() => { renderUpNext(); renderSpecials(); }, 30000);
 
             // Replay strips hide themselves once the broadcast has expired on Twitch
@@ -2325,9 +2427,12 @@
             initTwitchPlayer();
 
             // Listen for Auth Changes
-            onAuthStateChanged(auth, (user) => {
+            onAuthStateChanged(auth, async (user) => {
                 currentUser = user;
+                zoomLinksState = user ? 'loading' : 'signed-out';
                 updateUIForLogin(user);
+                await loadZoomLinks(user);
+                if (currentUser === user) renderAllZoomButtons();
             });
         });
     </script>
