@@ -54,3 +54,20 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Update replay links and share pages"
           git push
+
+  # Tripwire: fails (and GitHub emails you) if a Zoom or bit.ly link ever
+  # lands in a file the site serves. Zoom links belong in Firestore
+  # (private/zoomLinks), never in this public repo.
+  no-zoom-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+
+      - name: Make sure no Zoom or bit.ly links are published
+        run: |
+          if grep -rnIE "zoom\.us/[jw]/|bit\.ly/" --exclude-dir=.git --exclude-dir=.github . ; then
+            echo "::error::A Zoom or bit.ly link is in a published file. Move it to Firestore (private/zoomLinks) and remove it from the repo."
+            exit 1
+          fi
+          echo "No Zoom or bit.ly links in published files."
