@@ -44,7 +44,7 @@ const SHOWS = [
   { id: 'living-room',   match: ['living room'] },
   { id: 'ko-friday',     match: ['ko comedy friday', 'ko friday'] },
   { id: 'comedy-coffee', match: ['comedy coffee'] },
-  { id: 'ko-sunday',     match: ['ko sunday'] },
+  { id: 'ko-sunday',     match: ['ko sunday', 'ko comedy sunday'] },
 ];
 
 function die(msg) {

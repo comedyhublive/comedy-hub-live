@@ -84,7 +84,14 @@ function pageFor(show) {
   const where = show.type === 'twitch'
     ? 'Streaming live on Comedy Hub.'
     : 'Live on Comedy Hub - watch on Twitch or join the Zoom audience.';
-  const description = `${whenPhrase(show)}. ${where}`;
+  // An aired special with a replay up describes the replay, not the old showtime
+  // (-08:00 is Pacific standard time; during daylight time this errs an hour late, which is fine here)
+  const hhmm = String(show.hour).padStart(2, '0') + ':' + String(show.minute).padStart(2, '0');
+  const aired = show.replay && show.freq === 'once' && show.date &&
+    Date.now() > Date.parse(`${show.date}T${hhmm}:00-08:00`) + show.durationMins * 60000;
+  const description = aired
+    ? `Aired ${whenPhrase(show).replace(/ at .*/, '')}. Watch the replay on Twitch.`
+    : `${whenPhrase(show)}. ${where}`;
   const target = `${SITE}/#show-${show.id}`;
   const ogImage = `${SITE}/og/${show.id}.jpg`;
 
