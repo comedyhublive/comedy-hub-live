@@ -429,44 +429,29 @@
         </div>
     </div>
 
-    <!-- About Section -->
-    <section id="about" class="py-24 bg-cyber-charcoal relative">
+    <!-- Trailer -->
+    <section id="trailer" class="py-20 bg-cyber-charcoal relative scroll-mt-20">
         <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center reveal-on-scroll">
-                <div class="relative group logo-container">
-                    <div class="absolute -inset-4 bg-cyber-teal/20 blur-xl rounded-lg group-hover:bg-cyber-teal/30 transition-all duration-700"></div>
-                    <!-- Smart Image with Fallback to Mic Icon -->
-                    <img 
-                        src="ComedyHubLogogold.jpg?v=2" 
-                        alt="Comedy Hub Gold Seal" 
-                        class="relative rounded-lg border border-white/10 grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700 shadow-2xl w-full h-auto object-cover"
-                        onerror="handleLogoError(this)"
-                    >
-                    <div class="fallback-icon relative w-full aspect-square bg-cyber-black rounded-lg border border-cyber-gold flex items-center justify-center text-cyber-gold">
-                        <i data-lucide="mic" class="w-32 h-32"></i>
-                    </div>
-                    
-                    <div class="absolute -bottom-6 -right-6 bg-cyber-black p-4 border border-cyber-teal/50">
-                        <p class="font-display text-cyber-teal text-xl font-bold">EST. 2020</p>
-                        <p class="text-xs text-gray-400">DIGITAL ERA</p>
-                    </div>
-                </div>
-                
-                <div>
-                    <h2 class="text-cyber-teal font-display font-bold text-sm tracking-widest mb-2 uppercase">About Us</h2>
-                    <h3 class="text-4xl font-bold text-white mb-8">The Evolution of the Stage</h3>
-                    
-                    <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
-                        <p>We started on the front lines of digital performance as Twitch’s first live comedy club. What began as a channel dedicated to bringing professional sets to a global chat room evolved into something much bigger. We realized that while the comedy world is global, the tour bus has limits.</p>
-                        
-                        <p>Today, Comedy Hub is no longer just a stream—it’s a full-scale digital venue. We’ve traded the logistics of the road for the power of the fiber-optic cable. By combining elite broadcast tech with the intimacy of a front-row seat, we provide touring comedians a way to reach the fans they can’t see in person.</p>
-                        
-                        <div class="border-l-4 border-cyber-purple pl-6 py-2 italic text-white font-medium bg-gradient-to-r from-cyber-purple/10 to-transparent">
-                            "We handle the tech, the security, and the atmosphere; you just bring the bits. Welcome to the next era of the comedy club."
-                        </div>
-                    </div>
-                </div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal-on-scroll">
+            <div class="text-center mb-10">
+                <h2 class="text-cyber-teal font-display font-bold text-sm tracking-widest mb-2 uppercase">The Trailer</h2>
+                <h3 class="text-3xl md:text-4xl font-bold text-white">See What Comedy Hub Is All About</h3>
+            </div>
+            <div class="relative rounded-lg overflow-hidden border border-cyber-purple/40 shadow-[0_0_40px_rgba(145,70,255,0.25)] bg-black aspect-video">
+                <!-- Click-to-play: nothing downloads until someone hits play -->
+                <video class="w-full h-full" controls playsinline preload="none"
+                       poster="comedy-hub-trailer-poster.jpg" width="1920" height="1080">
+                    <source src="comedy-hub-trailer.mp4" type="video/mp4">
+                    Your browser can't play this video. <a href="https://www.twitch.tv/comedyhub" class="text-cyber-teal underline">Watch Comedy Hub on Twitch</a>.
+                </video>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <a href="#schedule" class="px-6 py-3 bg-cyber-teal hover:bg-white text-black font-bold rounded flex items-center justify-center gap-2 transition-colors">
+                    <i data-lucide="calendar" class="w-5 h-5"></i> SEE THE SCHEDULE
+                </a>
+                <a href="https://www.twitch.tv/comedyhub" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-cyber-purple hover:bg-purple-600 text-white font-bold rounded flex items-center justify-center gap-2 transition-colors">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="w-5 h-5 fill-current"><path d="M4.3 0 1.7 5.2v18.1h6.1V28h3.5l4.3-4.7h5.2L28 16.4V0H4.3zm2.6 2.6h18.5v12.5l-3.5 3.5h-6.1l-4.3 4.3v-4.3H6.9V2.6zm6.1 4.3v7h2.6v-7h-2.6zm6.9 0v7h2.6v-7h-2.6z" transform="scale(0.857)"/></svg> FOLLOW ON TWITCH
+                </a>
             </div>
         </div>
     </section>
@@ -634,6 +619,48 @@
                 <div id="twitch-embed" class="w-full h-full"></div>
             </div>
 
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-cyber-charcoal relative">
+        <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center reveal-on-scroll">
+                <div class="relative group logo-container">
+                    <div class="absolute -inset-4 bg-cyber-teal/20 blur-xl rounded-lg group-hover:bg-cyber-teal/30 transition-all duration-700"></div>
+                    <!-- Smart Image with Fallback to Mic Icon -->
+                    <img 
+                        src="ComedyHubLogogold.jpg?v=2" 
+                        alt="Comedy Hub Gold Seal" 
+                        class="relative rounded-lg border border-white/10 grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700 shadow-2xl w-full h-auto object-cover"
+                        onerror="handleLogoError(this)"
+                    >
+                    <div class="fallback-icon relative w-full aspect-square bg-cyber-black rounded-lg border border-cyber-gold flex items-center justify-center text-cyber-gold">
+                        <i data-lucide="mic" class="w-32 h-32"></i>
+                    </div>
+                    
+                    <div class="absolute -bottom-6 -right-6 bg-cyber-black p-4 border border-cyber-teal/50">
+                        <p class="font-display text-cyber-teal text-xl font-bold">EST. 2020</p>
+                        <p class="text-xs text-gray-400">DIGITAL ERA</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-cyber-teal font-display font-bold text-sm tracking-widest mb-2 uppercase">About Us</h2>
+                    <h3 class="text-4xl font-bold text-white mb-8">The Evolution of the Stage</h3>
+                    
+                    <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+                        <p>We started on the front lines of digital performance as Twitch’s first live comedy club. What began as a channel dedicated to bringing professional sets to a global chat room evolved into something much bigger. We realized that while the comedy world is global, the tour bus has limits.</p>
+                        
+                        <p>Today, Comedy Hub is no longer just a stream—it’s a full-scale digital venue. We’ve traded the logistics of the road for the power of the fiber-optic cable. By combining elite broadcast tech with the intimacy of a front-row seat, we provide touring comedians a way to reach the fans they can’t see in person.</p>
+                        
+                        <div class="border-l-4 border-cyber-purple pl-6 py-2 italic text-white font-medium bg-gradient-to-r from-cyber-purple/10 to-transparent">
+                            "We handle the tech, the security, and the atmosphere; you just bring the bits. Welcome to the next era of the comedy club."
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
