@@ -785,11 +785,32 @@
 
         const scheduleData = [
             {
+                // ---- JACKIE MONAHAN: TRIGGER WARNING - one-off, 2026-11-08 ----
+                // After it airs, add a `replay` block (like the Halloween entry
+                // below) to keep the card up with the Twitch replay.
+                day: 'SUN', dayIndex: 0, hour: 16, minute: 0, durationMins: 90,
+                freq: 'once', date: '2026-11-08', special: true,
+                accent: 'red', badge: 'First Look', badgeIcon: 'mic',
+                image: 'show-trigger-warning.jpg',
+                id: 'trigger-warning',
+                zoomKey: 'jackie-mo',   // same Zoom room as The Jackie Mo Show
+                title: 'Jackie Monahan: Trigger Warning',
+                tagline: 'A livestream first look at her new hour',
+                showSocials: [],
+                hosts: [
+                    { name: 'Jackie Monahan', url: 'https://www.instagram.com/jackiemonahan/' }
+                ],
+                desc: "Be the first to see Jackie Monahan's brand-new hour before it hits the road. Watch, laugh, give her your feedback, and have fun, live on Zoom or Twitch.",
+                type: 'zoom'
+            },
+            {
                 // ---- ONE-OFF HALLOWEEN SPECIAL (aired 2026-10-29) ----
                 // After it airs the card switches to replay mode and stays
                 // until replay.expires (Twitch deletes broadcasts after 60 days).
                 day: 'THU', dayIndex: 4, hour: 18, minute: 0, durationMins: 120,
                 freq: 'once', date: '2026-10-29', special: true,
+                accent: 'orange', badge: 'Halloween Special', badgeIcon: 'ghost',
+                lineupUrl: 'https://KOComedy.com',
                 image: 'show-halloween-bash.jpg',
                 id: 'halloween-bash',
                 title: "Zilla Vodnas' Halloween Bash",
@@ -869,7 +890,7 @@
                 title: 'The Jackie Mo Show',
                 showSocials: [],
                 hosts: [
-                    { name: 'Hosted by Jackie Monohan', url: 'https://www.instagram.com/jackiemonahan/' }
+                    { name: 'Hosted by Jackie Monahan', url: 'https://www.instagram.com/jackiemonahan/' }
                 ],
                 desc: 'Comedy. Chaos. Out of this world.',
                 type: 'zoom'
@@ -1222,8 +1243,10 @@
         let zoomLinks = {};
         let zoomLinksState = 'signed-out';   // 'loading' | 'ready' | 'error'
 
+        // `zoomKey` lets a show share another show's Zoom room
+        // (Trigger Warning uses The Jackie Mo Show's link).
         function zoomLinkFor(show) {
-            return (show && zoomLinks[show.id]) || '';
+            return (show && zoomLinks[show.zoomKey || show.id]) || '';
         }
 
         async function loadZoomLinks(user) {
@@ -2188,6 +2211,21 @@
 
             if (!upcoming.length) { mount.innerHTML = ''; return; }
 
+            // The card template below is written in orange; other accents are
+            // swapped in per show. Keys are Tailwind colour names.
+            const ACCENTS = {
+                orange: { name: 'orange', rgb: '249,115,22', badgeText: 'text-black' },
+                red:    { name: 'red',    rgb: '239,68,68',  badgeText: 'text-white' },
+            };
+            const themed = (html, show) => {
+                const a = ACCENTS[show.accent] || ACCENTS.orange;
+                if (a.name === 'orange') return html;
+                return html
+                    .replace(/orange-/g, a.name + '-')
+                    .replace(/249,115,22/g, a.rgb)
+                    .replace('bg-' + a.name + '-500 text-black', 'bg-' + a.name + '-500 ' + a.badgeText);
+            };
+
             mount.innerHTML = upcoming.map(({ show, start, ended }) => {
                 const started = now >= start;
 
@@ -2217,7 +2255,7 @@
                     '</a>'
                 ).join('<span class="text-orange-500/50 mx-2">&bull;</span>');
 
-                return '' +
+                return themed('' +
                 '<div id="show-' + show.id + '" class="mb-12 scroll-mt-28 bg-gradient-to-br from-orange-500/10 via-cyber-charcoal to-cyber-purple/20 border border-orange-500/50 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(249,115,22,0.18)] reveal-on-scroll is-visible">' +
                     '<div class="flex flex-col md:flex-row">' +
 
@@ -2232,7 +2270,7 @@
 
                                 '<div class="flex flex-wrap items-center gap-3 mb-4">' +
                                     '<span class="inline-flex items-center gap-2 px-3 py-1 bg-orange-500 text-black text-[12.5px] font-bold uppercase tracking-wider rounded">' +
-                                        '<i data-lucide="ghost" class="w-4 h-4"></i> Halloween Special' +
+                                        '<i data-lucide="' + (show.badgeIcon || 'star') + '" class="w-4 h-4"></i> ' + (show.badge || 'Special Event') +
                                     '</span>' +
                                     '<span class="text-[12.5px] font-bold tracking-widest uppercase text-orange-400">' + status + '</span>' +
                                 '</div>' +
@@ -2279,16 +2317,18 @@
                                     '<button class="share-btn px-6 py-3 bg-transparent border border-white/20 hover:border-cyber-teal hover:text-cyber-teal text-gray-300 font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap" data-share-index="' + scheduleData.indexOf(show) + '">' +
                                         '<i data-lucide="share-2" class="w-5 h-5"></i> SHARE' +
                                     '</button>' +
-                                    '<a href="https://KOComedy.com" target="_blank" rel="noopener noreferrer" ' +
-                                       'class="px-6 py-3 bg-transparent border border-white/20 hover:border-white/50 text-gray-300 hover:text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">' +
-                                        '<i data-lucide="mail" class="w-5 h-5"></i> GET THE LINEUP' +
-                                    '</a>' +
+                                    (show.lineupUrl
+                                      ? '<a href="' + show.lineupUrl + '" target="_blank" rel="noopener noreferrer" ' +
+                                         'class="px-6 py-3 bg-transparent border border-white/20 hover:border-white/50 text-gray-300 hover:text-white font-bold rounded flex items-center justify-center gap-2 transition-colors whitespace-nowrap">' +
+                                          '<i data-lucide="mail" class="w-5 h-5"></i> GET THE LINEUP' +
+                                        '</a>'
+                                      : '') +
                                 '</div>') +
 
                             '</div>' +
                         '</div>' +
                     '</div>' +
-                '</div>';
+                '</div>', show);
             }).join('');
 
             mount.querySelectorAll('.signin-trigger').forEach(b => b.addEventListener('click', toggleAuthModal));
