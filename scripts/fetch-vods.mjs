@@ -40,7 +40,7 @@ const SHOWS = [
   { id: 'chirping-bird', match: ['chirping bird'] },
   { id: 'kapfer',        match: ['kapfer'] },
   { id: 'fb4tb',         match: ['facebook for the blind', 'fb4tb'] },
-  { id: 'jackie-mo',     match: ['jackie mo'] },
+  { id: 'jackie-mo',     match: ['jackie mo show'] },   // not 'jackie mo': that also matches 'Jackie Monahan'
   { id: 'living-room',   match: ['living room'] },
   { id: 'ko-friday',     match: ['ko comedy friday', 'ko friday'] },
   { id: 'comedy-coffee', match: ['comedy coffee'] },
