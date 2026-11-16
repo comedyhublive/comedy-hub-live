@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15T18:44:38.173Z",
+  "updated": "2026-11-16T06:07:24.447Z",
   "channel": "comedyhub",
   "shows": {
     "chirping-bird": {
@@ -45,10 +45,10 @@
       "duration": "1:09:15"
     },
     "ko-sunday": {
-      "url": "https://www.twitch.tv/videos/2923759418",
-      "title": "KO Sunday",
-      "created_at": "2026-11-09T03:02:28Z",
-      "duration": "1:00:06"
+      "url": "https://www.twitch.tv/videos/2930233606",
+      "title": "KO Comedy Sunday",
+      "created_at": "2026-11-16T03:05:31Z",
+      "duration": "1:21:09"
     }
   }
 }
