@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-17T20:46:13.608Z",
+  "updated": "2026-11-18T07:06:36.789Z",
   "channel": "comedyhub",
   "shows": {
     "chirping-bird": {
@@ -9,16 +9,16 @@
       "duration": "1:38:43"
     },
     "kapfer": {
-      "url": "https://www.twitch.tv/videos/2912683150",
+      "url": "https://www.twitch.tv/videos/2931955734",
       "title": "Anthony Kapfer's Digital Something Show",
-      "created_at": "2026-10-28T01:00:21Z",
-      "duration": "1:00:51"
+      "created_at": "2026-11-18T02:00:37Z",
+      "duration": "38:13"
     },
     "fb4tb": {
-      "url": "https://www.twitch.tv/videos/2925537466",
-      "title": "Fb4tb Facebook for the Blind",
-      "created_at": "2026-11-11T03:37:20Z",
-      "duration": "1:07:29"
+      "url": "https://www.twitch.tv/videos/2932027917",
+      "title": "Fb4tb LIVE Ep. #283",
+      "created_at": "2026-11-18T03:37:06Z",
+      "duration": "1:06:42"
     },
     "jackie-mo": {
       "url": "https://www.twitch.tv/videos/2920737474",
